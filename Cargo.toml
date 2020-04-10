@@ -1,0 +1,13 @@
+[package]
+name = "fundoc"
+version = "0.1.0"
+authors = ["Sergey Golovin <golovim@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+regex = "1"
+glob = "0.3.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
