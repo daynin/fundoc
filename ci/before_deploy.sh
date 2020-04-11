@@ -19,7 +19,8 @@ main() {
 
     cross rustc --bin fundoc --target $TARGET --release -- -C lto
 
-    cp target/$TARGET/release/fundoc $stage/
+    cp target/$TARGET/release/fundoc $stage/ 2> /dev/null || cp target/$TARGET/release/fundoc.exe $stage/
+
 
     cd $stage
     tar czf $src/$CRATE_NAME-$TRAVIS_TAG-$TARGET.tar.gz *
