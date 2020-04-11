@@ -74,18 +74,16 @@ fn remove_ignored_text(text: String) -> String {
 }
 
 fn find_comments(file_content: &str) -> Vec<String> {
-  let comment_regex = Regex::new(r"(?m)^\s*\*.+").unwrap();
-  let comment = Regex::new(r"\*\*|\*").unwrap();
+  let comment_regex = Regex::new(r"(?m)^\s*\*[^\n\r]*").unwrap();
+  let comment_begin = Regex::new(r"(?m)^\*\*|\*").unwrap();
 
   let mut result: Vec<String> = vec![];
 
   for cap in comment_regex.captures_iter(file_content) {
-    let raw_text = comment.replace(&cap[0], "");
+    let raw_text = comment_begin.replace(&cap[0], "\n");
     let raw_text = raw_text.trim();
 
-    if !raw_text.is_empty() {
-      result.push(String::from(raw_text));
-    }
+    result.push(String::from(raw_text));
   }
 
   result
@@ -96,10 +94,10 @@ fn create_article(section: Vec<String>) -> Option<Article> {
   let mut content = String::new();
 
   for part in section {
-    if part.contains(Keywords::Ignore.as_str()) {
+    if part.starts_with(Keywords::Ignore.as_str()) {
       topic = None;
       break;
-    } else if part.contains(Keywords::Article.as_str()) {
+    } else if part.starts_with(Keywords::Article.as_str()) && topic == None {
       let raw_topic = part.replace(Keywords::Article.as_str(), "");
       let raw_topic = raw_topic.trim();
 
