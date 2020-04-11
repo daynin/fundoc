@@ -3,6 +3,13 @@ name = "fundoc"
 version = "0.1.0"
 authors = ["Sergey Golovin <golovim@gmail.com>"]
 edition = "2018"
+license = "MIT"
+description = "The right tool for documentation generating"
+readme = "README.md"
+homepage = "https://github.com/daynin/fundoc"
+repository = "https://github.com/daynin/fundoc"
+keywords = ["cli", "documentation", "generator"]
+categories = ["command-line-utilities"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
