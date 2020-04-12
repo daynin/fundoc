@@ -29,9 +29,9 @@ pub struct Config {
   /**
    * @Article Configuration
    *
-   * - `files_pattern` - unix style pathname pattern for matching files which will be parsed
+   * - `files_patterns` - unix style pathname patterns for matching files which will be parsed.
    */
-  pub files_pattern: String,
+  pub files_patterns: Vec<String>,
 }
 
 /**

@@ -5,8 +5,12 @@ mod config;
 fn main() {
   match config::read_config() {
     Some(config) => {
-      let path = format!("{}/{}", config.project_path, config.files_pattern);
-      let articles = parser::parse_path(&path);
+      let mut paths: Vec<String> = vec![];
+      for pattern in config.files_patterns {
+        paths.push(format!("{}/{}", config.project_path, pattern));
+      }
+
+      let articles = parser::parse_path(paths);
 
       generator::generate_docs(articles, config.docs_folder)
     },

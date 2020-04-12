@@ -10,7 +10,7 @@ the working directory.
 
 - `project_path` - an entry point for the parser
 
-- `files_pattern` - unix style pathname pattern for matching files which will be parsed
+- `files_patterns` - unix style pathname patterns for matching files which will be parsed.
 
 Fundoc will read all the configuration parameters from the `fundoc.json` config file
 which should be placed into the working directory of the programm's proccess (generally, it's a root of a

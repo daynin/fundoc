@@ -157,24 +157,26 @@ pub fn parse_file(file_content: &str) -> Vec<Article> {
   result
 }
 
-pub fn parse_path(directory_path: &str) -> Vec<Article> {
+pub fn parse_path(directory_paths: Vec<String>) -> Vec<Article> {
   let mut result: Vec<Article> = vec![];
 
-  for entry in glob(directory_path).expect("Failed to read glob pattern") {
-    match entry {
-      Ok(path) => {
-        let mut f = File::open(path).expect("File not found");
+  for path in directory_paths {
+    for entry in glob(&path).expect("Failed to read glob pattern") {
+      match entry {
+        Ok(path) => {
+          let mut f = File::open(path).expect("File not found");
 
-        let mut content = String::new();
-        f.read_to_string(&mut content)
-            .expect("something went wrong reading the file");
+          let mut content = String::new();
+          f.read_to_string(&mut content)
+              .expect("something went wrong reading the file");
 
-        let prepared_content = remove_ignored_text(content);
-        result.append(&mut parse_file(prepared_content.as_str()));
-      },
-      Err(e) => {
-        println!("{:?}", e);
-      },
+          let prepared_content = remove_ignored_text(content);
+          result.append(&mut parse_file(prepared_content.as_str()));
+        },
+        Err(e) => {
+          println!("{:?}", e);
+        },
+      }
     }
   }
 

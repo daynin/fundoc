@@ -1,5 +1,0 @@
-{
-  "docs_folder": "./docs",
-  "project_path": "./src",
-  "files_pattern": "**/*.rs"
-}
