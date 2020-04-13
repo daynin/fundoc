@@ -1,0 +1,8 @@
+{
+  "docs_folder": "./docs",
+  "project_path": "./src",
+  "files_patterns": [
+    "**/*.rs"
+  ],
+  "repository_host": "https://github.com/daynin/fundoc/blob/master/"
+}

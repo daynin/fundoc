@@ -7,6 +7,7 @@ use std::io::prelude::*;
 pub struct Article {
   pub topic: String,
   pub content: String,
+  pub path: String,
 }
 
 impl PartialEq for Article {
@@ -111,7 +112,7 @@ fn find_comments(file_content: &str) -> Vec<String> {
   result
 }
 
-fn create_article(section: Vec<String>) -> Option<Article> {
+fn create_article(section: Vec<String>, file_path: &str) -> Option<Article> {
   let mut topic: Option<String> = None;
   let mut content = String::new();
 
@@ -135,20 +136,21 @@ fn create_article(section: Vec<String>) -> Option<Article> {
     Some(Article {
       topic: topic.unwrap(),
       content: content,
+      path: file_path.to_string(),
     })
   } else {
     None
   }
 }
 
-pub fn parse_file(file_content: &str) -> Vec<Article> {
+pub fn parse_file(file_content: &str, file_path: &str) -> Vec<Article> {
   let comments = find_comments(file_content);
   let comments = comments.split(|elem| elem == "/");
 
   let mut result: Vec<Article> = vec![];
 
   for section in comments {
-    let article = create_article(section.to_vec());
+    let article = create_article(section.to_vec(), file_path);
     if article.is_some() {
       result.push(article.unwrap());
     }
@@ -163,15 +165,17 @@ pub fn parse_path(directory_paths: Vec<String>) -> Vec<Article> {
   for path in directory_paths {
     for entry in glob(&path).expect("Failed to read glob pattern") {
       match entry {
-        Ok(path) => {
-          let mut f = File::open(path).expect("File not found");
+        Ok(entry_path) => {
+          let mut f = File::open(&entry_path).expect("File not found");
 
           let mut content = String::new();
           f.read_to_string(&mut content)
               .expect("something went wrong reading the file");
 
           let prepared_content = remove_ignored_text(content);
-          result.append(&mut parse_file(prepared_content.as_str()));
+          let file_path = entry_path.to_str().unwrap();
+
+          result.append(&mut parse_file(prepared_content.as_str(), file_path));
         },
         Err(e) => {
           println!("{:?}", e);
@@ -214,10 +218,11 @@ fn parse_articles_from_file_content() {
 pub fn test () {}
   ";
 
-  let articles = parse_file(file_content);
+  let articles = parse_file(file_content, "");
   let expected_result = vec![Article {
     topic: String::from("Test article"),
     content: String::from("some text"),
+    path: "".to_string(),
   }];
 
 
@@ -237,10 +242,11 @@ use std::io::prelude::*;
 pub fn test () {}
   ";
 
-  let articles = parse_file(file_content);
+  let articles = parse_file(file_content, "");
   let expected_result = vec![Article {
     topic: String::from("Test article"),
     content: String::from("some multiline\nawesome text"),
+    path: "".to_string(),
   }];
 
 

@@ -18,3 +18,4 @@ Example:
 */
 fn main() {}
 ```
+[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs)

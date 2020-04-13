@@ -4,6 +4,7 @@ use std::fs::File;
 use std::io::prelude::*;
 
 use crate::parser;
+use crate::config;
 
 #[derive(Debug)]
 struct Document {
@@ -23,8 +24,9 @@ fn update_dir(path: &str) -> Result<(), std::io::Error> {
   fs::create_dir_all(path)
 }
 
-fn merge_docs(articles: Vec<parser::Article>) -> HashMap<String, Document> {
+fn merge_docs(articles: Vec<parser::Article>, repository_host: Option<String>) -> HashMap<String, Document> {
   let mut documentation: HashMap<String, Document> = HashMap::new();
+  let repository_host = &repository_host;
 
   for article in articles {
     let file_name = article.topic.to_lowercase();
@@ -38,7 +40,13 @@ fn merge_docs(articles: Vec<parser::Article>) -> HashMap<String, Document> {
         content: "".to_string(),
       });
 
-    document.content = format!("{}\n{}\n", document.content, article.content.clone());
+
+    let link = match repository_host {
+      Some(host) => format!("[[~]]({}{})", host, article.path),
+      None => "".to_string(),
+    };
+
+    document.content = format!("{}\n{}\n{}\n", document.content, article.content.clone(), link);
   }
 
   documentation
@@ -58,11 +66,11 @@ fn write_doc(document: &Document, docs_path: &str) {
   }
 }
 
-pub fn generate_docs(articles: Vec<parser::Article>, docs_path: Option<String>) {
+pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
   println!("Start documentation generating...");
 
-  let docs_path = docs_path.or(Some(DEFAULT_DOCS_PATH.to_string())).unwrap();
-  let documentation = merge_docs(articles);
+  let docs_path = config.docs_folder.or(Some(DEFAULT_DOCS_PATH.to_string())).unwrap();
+  let documentation = merge_docs(articles, config.repository_host);
 
   update_dir(&docs_path).expect("Cannot create the documentation folder");
 

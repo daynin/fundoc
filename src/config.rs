@@ -32,6 +32,16 @@ pub struct Config {
    * - `files_patterns` - unix style pathname patterns for matching files which will be parsed.
    */
   pub files_patterns: Vec<String>,
+  /**
+   * @Article Configuration
+   *
+   * - `repository_prefix` - an http url which will be used for creating a link to a file in a
+   * repository. For example, if you want to add links to your files for each section you can pass
+   * a value like `https://github.com/user_name/project_name/blob/master`. It will be used for
+   * creating an url like this
+   * `https://github.com/user_name/project_name/blob/master/path/to/your/file.txt`.
+   */
+  pub repository_host: Option<String>,
 }
 
 /**
