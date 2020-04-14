@@ -14,6 +14,52 @@ Fundoc's main goals:
 	<img src="./fundoc-example.png" />
 </p>
 
+### Why you should use it
+
+If you want to keep your documentation synchronised with your code and to be able to describe different parts of a business feature in in places where it was implemented, like:
+
+`src/api/orders.rs`
+
+```rust
+// An API layer which implements "orders" in your system
+
+fn get_orders(params: ReqParams) {
+	/**
+	 * @ Article Orders
+	 *
+	 * A description part of whole "orders" feature about logic of how to get them
+	 * /
+	...
+	// Some code here
+}
+```
+
+`src/utils/orders.rs`
+
+```rust
+// Utils functions for parsing/validating/etc orders
+
+fn validate_order(order: Order) {
+	/**
+	 * @ Article Orders
+	 *
+	 * A description part of whole "orders" feature about their validation rules
+	 * /
+	...
+	// Some code here
+}
+```
+
+`orders.md`
+
+```markdown
+# Orders
+
+A description part of whole "orders" feature about logic of how to get them [~](https://link-to-a-source-file.com/src/api/orders.rs)
+
+A description part of whole "orders" feature about their validation rules [~](https://link-to-a-source-file.com/src/utils/rs)
+```
+
 ### Installation
 
 You can install fundoc by executing this shell script:
