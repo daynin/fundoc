@@ -1,0 +1,7 @@
+{
+  "dataSource": "commits",
+  "ignoreIssuesWith": [
+    "wontfix",
+    "duplicate"
+  ]
+}
