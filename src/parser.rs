@@ -95,7 +95,7 @@ fn remove_ignored_text(text: String) -> String {
         None => text.len(),
     };
 
-    let mut result = text.clone();
+    let mut result = text;
 
     if start_idx != end_idx {
         result.replace_range(start_idx..end_idx, "");
@@ -140,14 +140,13 @@ fn create_article(section: Vec<String>, file_path: &str) -> Option<Article> {
         }
     }
 
-    if topic.is_some() {
-        Some(Article {
-            topic: topic.unwrap(),
-            content: content,
+    match topic {
+        Some(topic) => Some(Article {
             path: file_path.to_string(),
-        })
-    } else {
-        None
+            topic,
+            content,
+        }),
+        None => None,
     }
 }
 
@@ -159,8 +158,9 @@ pub fn parse_file(file_content: &str, file_path: &str) -> Vec<Article> {
 
     for section in comments {
         let article = create_article(section.to_vec(), file_path);
-        if article.is_some() {
-            result.push(article.unwrap());
+
+        if let Some(article) = article {
+            result.push(article)
         }
     }
 

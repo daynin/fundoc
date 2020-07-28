@@ -75,7 +75,7 @@ pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
 
     let docs_path = config
         .docs_folder
-        .or(Some(DEFAULT_DOCS_PATH.to_string()))
+        .or_else(|| Some(DEFAULT_DOCS_PATH.to_string()))
         .unwrap();
     let documentation = merge_docs(articles, config.repository_host);
 
