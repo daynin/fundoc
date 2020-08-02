@@ -43,7 +43,10 @@ fn merge_docs(
         });
 
         let link = match repository_host {
-            Some(host) => format!("[[~]]({}{})", host, article.path),
+            Some(host) => format!(
+                "[[~]]({}{}#L{}-L{})",
+                host, article.path, article.start_line, article.end_line
+            ),
             None => "".to_string(),
         };
 

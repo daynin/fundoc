@@ -8,6 +8,8 @@ pub struct Article {
     pub topic: String,
     pub content: String,
     pub path: String,
+    pub start_line: i16,
+    pub end_line: i16,
 }
 
 impl PartialEq for Article {
@@ -104,72 +106,73 @@ fn remove_ignored_text(text: String) -> String {
     result
 }
 
-fn find_comments(file_content: &str) -> Vec<String> {
-    let comment_regex = Regex::new(r"(?m)^\s*\*[^\n\r]*").unwrap();
-    let comment_begin = Regex::new(r"(?m)^\*\*|\*").unwrap();
-
-    let mut result: Vec<String> = vec![];
-
-    for cap in comment_regex.captures_iter(file_content) {
-        let raw_text = comment_begin.replace(&cap[0], "\n");
-        let raw_text = raw_text.trim();
-
-        result.push(String::from(raw_text));
-    }
-
-    result
+fn trim_article_line(line: String, comment_symbol: char) -> String {
+    line.trim().trim_matches(comment_symbol).trim().to_string()
 }
 
-fn create_article(section: Vec<String>, file_path: &str) -> Option<Article> {
-    let mut topic: Option<String> = None;
-    let mut content = String::new();
-
-    for part in section {
-        if part.starts_with(Keywords::Ignore.as_str()) {
-            topic = None;
-            break;
-        } else if part.starts_with(Keywords::Article.as_str()) && topic == None {
-            let raw_topic = part.replace(Keywords::Article.as_str(), "");
-            let raw_topic = raw_topic.trim();
-
-            topic = Some(String::from(raw_topic));
-        } else if content.is_empty() {
-            content = part;
-        } else {
-            content += &format!("\n{}", part);
-        }
-    }
-
-    match topic {
-        Some(topic) => Some(Article {
-            path: file_path.to_string(),
-            topic,
-            content,
-        }),
-        None => None,
+fn new_article() -> Article {
+    Article {
+        topic: String::from(""),
+        content: String::from(""),
+        path: String::from(""),
+        start_line: 1,
+        end_line: 1,
     }
 }
 
-pub fn parse_file(file_content: &str, file_path: &str) -> Vec<Article> {
-    let comments = find_comments(file_content);
-    let comments = comments.split(|elem| elem == "/");
+fn parse_file(file_content: &str, file_path: &str) -> Vec<Article> {
+    let start_comment = "/**";
+    let comment_symbol = '*';
+    let end_comment = "*/";
+    let mut line_number = 1;
+    let mut articles: Vec<Article> = vec![];
+    let mut current_article: Article = new_article();
+    let mut is_comment_section = false;
+    let mut is_article_section = false;
 
-    let mut result: Vec<Article> = vec![];
+    for line in file_content.lines() {
+        if line.trim().starts_with(start_comment) {
+            is_comment_section = true;
+        } else if line.trim().starts_with(end_comment) {
+            is_comment_section = false;
+            if is_article_section {
+                is_article_section = false;
 
-    for section in comments {
-        match section {
-            [] => (),
-            _ => {
-                let article = create_article(section.to_vec(), file_path);
+                current_article.content = current_article.content.trim().to_string();
+                current_article.path = file_path.to_string();
+                current_article.end_line = line_number - 1;
+                articles.push(current_article);
 
-                if let Some(article) = article {
-                    result.push(article)
-                }
+                current_article = new_article();
             }
         }
+
+        if is_comment_section {
+            if trim_article_line(line.to_string(), comment_symbol)
+                .starts_with(Keywords::Article.as_str())
+            {
+                let topic = line.replace(Keywords::Article.as_str(), "");
+
+                current_article.topic = trim_article_line(topic, comment_symbol);
+                current_article.start_line = line_number;
+                is_article_section = true;
+            } else if trim_article_line(line.to_string(), comment_symbol)
+                .starts_with(Keywords::Ignore.as_str())
+            {
+                is_article_section = false;
+                is_comment_section = false;
+                current_article = new_article();
+            } else if is_article_section {
+                let trimmed_content = trim_article_line(line.to_string(), comment_symbol);
+
+                current_article.content += format!("{}\n", trimmed_content).as_str();
+            }
+        }
+
+        line_number += 1;
     }
 
-    result
+    articles
 }
 
 pub fn parse_path(directory_paths: Vec<String>) -> Vec<Article> {
@@ -202,26 +205,6 @@ pub fn parse_path(directory_paths: Vec<String>) -> Vec<Article> {
 
 // fundoc-disable
 #[test]
-fn find_comments_in_file() {
-    let file_content = "
-/**
- * @Article Test article
- * some text
- */
-pub fn test () {}
-  ";
-
-    let comments = find_comments(file_content);
-    let expected_result = [
-        String::from("@Article Test article"),
-        String::from("some text"),
-        String::from("/"),
-    ];
-
-    assert_eq!(*comments, expected_result);
-}
-
-#[test]
 fn parse_articles_from_file_content() {
     let file_content = "
 /**
@@ -236,9 +219,29 @@ pub fn test () {}
         topic: String::from("Test article"),
         content: String::from("some text"),
         path: "".to_string(),
+        start_line: 1,
+        end_line: 1,
     }];
 
     assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn ignore_comments_with_ignore_mark() {
+    let file_content = "
+/**
+ * @Article Test article
+ * @Ignore
+ * some text
+ *
+ * next line
+ */
+pub fn test () {}
+  ";
+
+    let articles = parse_file(file_content, "");
+
+    assert_eq!(articles, vec![]);
 }
 
 #[test]
@@ -259,6 +262,8 @@ pub fn test () {}
         topic: String::from("Test article"),
         content: String::from("some multiline\nawesome text"),
         path: "".to_string(),
+        start_line: 1,
+        end_line: 1,
     }];
 
     assert_eq!(articles, expected_result);

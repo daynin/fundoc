@@ -9,13 +9,13 @@ be merged. You can use `markdown` syntax in documentation sections.
 Example:
 
 ```rust
-/**
+/
 * @Article How it works
-*
+
 * # Title of the article
-*
+
 * Some text
 */
 fn main() {}
 ```
-[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs)
+[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L23-L42)
