@@ -157,10 +157,15 @@ pub fn parse_file(file_content: &str, file_path: &str) -> Vec<Article> {
     let mut result: Vec<Article> = vec![];
 
     for section in comments {
-        let article = create_article(section.to_vec(), file_path);
+        match section {
+            [] => (),
+            _ => {
+                let article = create_article(section.to_vec(), file_path);
 
-        if let Some(article) = article {
-            result.push(article)
+                if let Some(article) = article {
+                    result.push(article)
+                }
+            }
         }
     }
 
