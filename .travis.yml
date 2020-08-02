@@ -9,6 +9,7 @@ sudo: required
 env:
   global:
     - CRATE_NAME=fundoc
+    - CARGO_PROFILE_THIN_LTO
 
 matrix:
   include:
@@ -17,6 +18,8 @@ matrix:
     # OSX
     - env: TARGET=x86_64-apple-darwin
       os: osx
+    # Windows
+    - env: TARGET=x86_64-pc-windows-gnu
 
     # Testing other channels
     - env: TARGET=x86_64-unknown-linux-gnu

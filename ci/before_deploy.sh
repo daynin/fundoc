@@ -17,7 +17,7 @@ main() {
 
     test -f Cargo.lock || cargo generate-lockfile
 
-    cross rustc --bin fundoc --target $TARGET --release -- -C lto
+    cross rustc --bin fundoc --target $TARGET --release
 
     cp target/$TARGET/release/fundoc $stage/ 2> /dev/null || cp target/$TARGET/release/fundoc.exe $stage/
 
