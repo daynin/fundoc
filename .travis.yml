@@ -9,7 +9,6 @@ sudo: required
 env:
   global:
     - CRATE_NAME=fundoc
-    - CARGO_PROFILE_THIN_LTO
 
 matrix:
   include:
