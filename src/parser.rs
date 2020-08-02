@@ -107,7 +107,7 @@ fn remove_ignored_text(text: String) -> String {
 }
 
 fn trim_article_line(line: String, comment_symbol: char) -> String {
-    line.trim().trim_matches(comment_symbol).trim().to_string()
+    line.trim_start().trim_start_matches(comment_symbol).trim_start().to_string()
 }
 
 fn new_article() -> Article {

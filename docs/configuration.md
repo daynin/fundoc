@@ -16,7 +16,7 @@ the working directory.
 - `files_patterns` - unix style pathname patterns for matching files which will be parsed.
 [[~]](https://github.com/daynin/fundoc/blob/master/src/config.rs#L29-L31)
 
-- `repository_prefix` - an http url which will be used for creating a link to a file in a
+- `repository_host` - an http url which will be used for creating a link to a file in a
 repository. For example, if you want to add links to your files for each section you can pass
 a value like `https://github.com/user_name/project_name/blob/master`. It will be used for
 creating an url like this

@@ -9,11 +9,11 @@ be merged. You can use `markdown` syntax in documentation sections.
 Example:
 
 ```rust
-/
+/**
 * @Article How it works
-
+*
 * # Title of the article
-
+*
 * Some text
 */
 fn main() {}
