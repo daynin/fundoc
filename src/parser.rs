@@ -3,6 +3,8 @@ use regex::Regex;
 use std::fs::File;
 use std::io::prelude::*;
 
+use crate::config;
+
 #[derive(Debug)]
 pub struct Article {
     pub topic: String,
@@ -107,7 +109,10 @@ fn remove_ignored_text(text: String) -> String {
 }
 
 fn trim_article_line(line: String, comment_symbol: char) -> String {
-    line.trim_start().trim_start_matches(comment_symbol).trim_start().to_string()
+    line.trim_start()
+        .trim_start_matches(comment_symbol)
+        .trim_start()
+        .to_string()
 }
 
 fn new_article() -> Article {
@@ -120,10 +125,15 @@ fn new_article() -> Article {
     }
 }
 
-fn parse_file(file_content: &str, file_path: &str) -> Vec<Article> {
-    let start_comment = "/**";
-    let comment_symbol = '*';
-    let end_comment = "*/";
+fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Vec<Article> {
+    let start_comment = &config
+        .comment_start_string
+        .unwrap_or_else(|| "/**".to_string());
+    let comment_symbol = config.comment_prefix.unwrap_or('*');
+    let end_comment = &config
+        .comment_end_string
+        .unwrap_or_else(|| "*/".to_string());
+
     let mut line_number = 1;
     let mut articles: Vec<Article> = vec![];
     let mut current_article: Article = new_article();
@@ -175,7 +185,7 @@ fn parse_file(file_content: &str, file_path: &str) -> Vec<Article> {
     articles
 }
 
-pub fn parse_path(directory_paths: Vec<String>) -> Vec<Article> {
+pub fn parse_path(directory_paths: Vec<String>, config: config::Config) -> Vec<Article> {
     let mut result: Vec<Article> = vec![];
 
     for path in directory_paths {
@@ -191,7 +201,11 @@ pub fn parse_path(directory_paths: Vec<String>) -> Vec<Article> {
                     let prepared_content = remove_ignored_text(content);
                     let file_path = entry_path.to_str().unwrap();
 
-                    result.append(&mut parse_file(prepared_content.as_str(), file_path));
+                    result.append(&mut parse_file(
+                        prepared_content.as_str(),
+                        file_path,
+                        config.clone(),
+                    ));
                 }
                 Err(e) => {
                     println!("{:?}", e);
@@ -204,6 +218,19 @@ pub fn parse_path(directory_paths: Vec<String>) -> Vec<Article> {
 }
 
 // fundoc-disable
+#[cfg(test)]
+fn get_test_config() -> config::Config {
+    config::Config {
+        project_path: "test".to_string(),
+        files_patterns: vec!["test".to_string()],
+        docs_folder: None,
+        repository_host: None,
+        comment_start_string: None,
+        comment_prefix: None,
+        comment_end_string: None,
+    }
+}
+
 #[test]
 fn parse_articles_from_file_content() {
     let file_content = "
@@ -214,7 +241,7 @@ fn parse_articles_from_file_content() {
 pub fn test () {}
   ";
 
-    let articles = parse_file(file_content, "");
+    let articles = parse_file(file_content, "", get_test_config());
     let expected_result = vec![Article {
         topic: String::from("Test article"),
         content: String::from("some text"),
@@ -239,7 +266,7 @@ fn ignore_comments_with_ignore_mark() {
 pub fn test () {}
   ";
 
-    let articles = parse_file(file_content, "");
+    let articles = parse_file(file_content, "", get_test_config());
 
     assert_eq!(articles, vec![]);
 }
@@ -257,7 +284,7 @@ use std::io::prelude::*;
 pub fn test () {}
   ";
 
-    let articles = parse_file(file_content, "");
+    let articles = parse_file(file_content, "", get_test_config());
     let expected_result = vec![Article {
         topic: String::from("Test article"),
         content: String::from("some multiline\nawesome text"),

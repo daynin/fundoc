@@ -10,7 +10,7 @@ fn main() {
                 paths.push(format!("{}/{}", config.project_path, pattern));
             }
 
-            let articles = parser::parse_path(paths);
+            let articles = parser::parse_path(paths, config.clone());
 
             generator::generate_docs(articles, config)
         }

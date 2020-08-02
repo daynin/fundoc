@@ -7,7 +7,7 @@ use std::io::prelude::*;
  *
  * Configuration parameters:
  */
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Config {
     /**
      * @Article Configuration
@@ -41,6 +41,16 @@ pub struct Config {
      * `https://github.com/user_name/project_name/blob/master/path/to/your/file.txt`.
      */
     pub repository_host: Option<String>,
+    /**
+     * @Article Configuration
+     *
+     * - `comment_start_string` - a string which marks the start of a comments block. Example: &#47;\*\*
+     * - `comment_prefix` - a comment line prefix. Example: \*
+     * - `comment_end_string` - a string which marks the end of a comments block. Example: \*&#47;
+     */
+    pub comment_start_string: Option<String>,
+    pub comment_prefix: Option<char>,
+    pub comment_end_string: Option<String>,
 }
 
 /**
