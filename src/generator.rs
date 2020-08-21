@@ -74,8 +74,6 @@ fn write_doc(document: &Document, docs_path: &str) {
 }
 
 pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
-    println!("Start documentation generating...");
-
     let docs_path = config
         .docs_folder
         .or_else(|| Some(DEFAULT_DOCS_PATH.to_string()))
@@ -92,6 +90,4 @@ pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
             None => println!("Cannot find document"),
         }
     }
-
-    println!("Done!");
 }

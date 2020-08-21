@@ -14,6 +14,11 @@ pub struct Article {
     pub end_line: i16,
 }
 
+pub struct ParsingResult {
+    pub articles: Vec<Article>,
+    pub coverage: f32,
+}
+
 impl PartialEq for Article {
     fn eq(&self, other: &Self) -> bool {
         self.topic == other.topic && self.content == other.content
@@ -185,8 +190,10 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
     articles
 }
 
-pub fn parse_path(directory_paths: Vec<String>, config: config::Config) -> Vec<Article> {
+pub fn parse_path(directory_paths: Vec<String>, config: config::Config) -> ParsingResult {
     let mut result: Vec<Article> = vec![];
+    let mut files_with_documentation = 0.0;
+    let mut files_counter = 0.0;
 
     for path in directory_paths {
         for entry in glob(&path).expect("Failed to read glob pattern") {
@@ -200,12 +207,15 @@ pub fn parse_path(directory_paths: Vec<String>, config: config::Config) -> Vec<A
 
                     let prepared_content = remove_ignored_text(content);
                     let file_path = entry_path.to_str().unwrap();
+                    let articles =
+                        &mut parse_file(prepared_content.as_str(), file_path, config.clone());
 
-                    result.append(&mut parse_file(
-                        prepared_content.as_str(),
-                        file_path,
-                        config.clone(),
-                    ));
+                    files_counter += 1.0;
+                    if !articles.is_empty() {
+                        files_with_documentation += 1.0;
+                    }
+
+                    result.append(articles);
                 }
                 Err(e) => {
                     println!("{:?}", e);
@@ -214,7 +224,10 @@ pub fn parse_path(directory_paths: Vec<String>, config: config::Config) -> Vec<A
         }
     }
 
-    result
+    ParsingResult {
+        articles: result,
+        coverage: files_with_documentation / files_counter * 100.0,
+    }
 }
 
 // fundoc-disable
