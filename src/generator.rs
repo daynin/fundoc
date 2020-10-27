@@ -73,6 +73,33 @@ fn write_doc(document: &Document, docs_path: &str) {
     }
 }
 
+fn write_summary(documents: &HashMap<String, Document>, docs_path: &str) {
+    let mut content = String::from("# Summary\n\n");
+
+    for key in documents.keys() {
+        let document = documents.get(key);
+
+        match document {
+            Some(document) => {
+                content += format!(
+                    "* [{}]({}/{})\n",
+                    document.title, docs_path, document.file_name
+                )
+                .as_str()
+            }
+            None => println!("Cannot find document"),
+        }
+    }
+
+    match File::create(format!("{}/readme.md", docs_path)) {
+        Ok(mut file) => match file.write_all(content.as_bytes()) {
+            Ok(_) => println!("Summary is created",),
+            Err(_) => println!("Cannot create summary file"),
+        },
+        Err(e) => println!("{:?}", e),
+    }
+}
+
 pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
     let docs_path = config
         .docs_folder
@@ -81,6 +108,7 @@ pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
     let documentation = merge_docs(articles, config.repository_host);
 
     update_dir(&docs_path).expect("Cannot create the documentation folder");
+    write_summary(&documentation, &docs_path);
 
     for key in documentation.keys() {
         let document = documentation.get(key);
