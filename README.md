@@ -2,7 +2,7 @@
 ![Tests Status](https://github.com/daynin/fundoc/workflows/tests/badge.svg) [![Build Status](https://travis-ci.org/daynin/fundoc.svg?branch=master)](https://travis-ci.org/daynin/fundoc) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![GitHub Issues](https://img.shields.io/github/issues/daynin/fundoc.svg)](https://github.com/daynin/fundoc/issues)
 -
 
-**Fundoc** - the right way to generate documentation. A business feature in your project may be implemented in separated files and even in different technologies. Fundoc can merge all descriptions about business features and put in appropriate files.
+**Fundoc** - the right way to generate documentation. A business feature in your project may be implemented in separated files and even in different technologies. Fundoc can merge all descriptions of business features and put in appropriate files.
 
 Fundoc's main goals:
 
