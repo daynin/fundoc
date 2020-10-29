@@ -67,7 +67,7 @@ fn write_doc(document: &Document, docs_path: &str) {
     match File::create(format!("{}/{}", docs_path, file_name)) {
         Ok(mut file) => match file.write_all(to_markdown(document).as_bytes()) {
             Ok(_) => println!("\"{}\" is created", file_name),
-            Err(_) => println!("Cannot write file {}", file_name),
+            Err(_) => println!("Cannot write a file: {}", file_name),
         },
         Err(e) => println!("{:?}", e),
     }
@@ -81,11 +81,7 @@ fn write_summary(documents: &HashMap<String, Document>, docs_path: &str) {
 
         match document {
             Some(document) => {
-                content += format!(
-                    "* [{}]({}/{})\n",
-                    document.title, docs_path, document.file_name
-                )
-                .as_str()
+                content += format!("* [{}](./{})\n", document.title, document.file_name).as_str()
             }
             None => println!("Cannot find document"),
         }
@@ -94,7 +90,7 @@ fn write_summary(documents: &HashMap<String, Document>, docs_path: &str) {
     match File::create(format!("{}/readme.md", docs_path)) {
         Ok(mut file) => match file.write_all(content.as_bytes()) {
             Ok(_) => println!("Summary is created",),
-            Err(_) => println!("Cannot create summary file"),
+            Err(_) => println!("Cannot create the summary file"),
         },
         Err(e) => println!("{:?}", e),
     }
@@ -115,7 +111,7 @@ pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
 
         match document {
             Some(document) => write_doc(document, &docs_path),
-            None => println!("Cannot find document"),
+            None => println!("Cannot find the document"),
         }
     }
 }
