@@ -1,4 +1,4 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::prelude::*;
 
@@ -7,7 +7,7 @@ use std::io::prelude::*;
  *
  * Configuration parameters:
  */
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Config {
     /**
      * @Article Configuration
@@ -80,4 +80,25 @@ pub fn read_config() -> Option<Config> {
     };
 
     config
+}
+
+pub fn create_default_config() {
+    let config = serde_json::to_string_pretty(&Config {
+        docs_folder: Some(String::from("./docs")),
+        project_path: String::from("./src"),
+        files_patterns: vec![String::from("**/*.rs")],
+        comment_start_string: None,
+        comment_end_string: None,
+        comment_prefix: None,
+        repository_host: None,
+    })
+    .unwrap();
+
+    match File::create("./fundoc.json") {
+        Ok(mut file) => match file.write_all(&config.as_bytes()) {
+            Ok(_) => println!("Initialization is completed!",),
+            Err(_) => println!("Cannot create the config file"),
+        },
+        Err(e) => println!("{:?}", e),
+    }
 }
