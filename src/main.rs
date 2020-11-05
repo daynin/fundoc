@@ -13,8 +13,14 @@ fn main() {
             Some(config) => {
                 println!("Start documentation parsing...\n");
 
+                let files_patterns: Vec<String> = vec![
+                    vec!["**/*.fdoc.md".to_string()],
+                    config.files_patterns.clone(),
+                ]
+                .concat();
                 let mut paths: Vec<String> = vec![];
-                for pattern in &config.files_patterns {
+
+                for pattern in files_patterns {
                     paths.push(format!("{}/{}", config.project_path, pattern));
                 }
 

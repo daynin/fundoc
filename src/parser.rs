@@ -21,7 +21,11 @@ pub struct ParsingResult {
 
 impl PartialEq for Article {
     fn eq(&self, other: &Self) -> bool {
-        self.topic == other.topic && self.content == other.content
+        self.topic == other.topic
+            && self.content == other.content
+            && self.path == other.path
+            && self.start_line == other.start_line
+            && self.end_line == other.end_line
     }
 }
 
@@ -130,7 +134,25 @@ fn new_article() -> Article {
     }
 }
 
+fn parse_fdoc_file(file_content: &str, file_path: &str) -> Vec<Article> {
+    let file_name = file_path.split('/').last().unwrap();
+    let name_chunks: Vec<&str> = file_name.rsplit('.').collect();
+    let topic = name_chunks.get(2..).unwrap().join(".");
+
+    vec![Article {
+        topic,
+        content: String::from(file_content),
+        path: String::from(file_path),
+        start_line: 1,
+        end_line: 1,
+    }]
+}
+
 fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Vec<Article> {
+    if file_path.ends_with(".fdoc.md") {
+        return parse_fdoc_file(file_content, file_path);
+    }
+
     let start_comment = &config
         .comment_start_string
         .unwrap_or_else(|| "/**".to_string());
@@ -259,8 +281,8 @@ pub fn test () {}
         topic: String::from("Test article"),
         content: String::from("some text"),
         path: "".to_string(),
-        start_line: 1,
-        end_line: 1,
+        start_line: 3,
+        end_line: 4,
     }];
 
     assert_eq!(articles, expected_result);
@@ -302,8 +324,8 @@ pub fn test () {}
         topic: String::from("Test article"),
         content: String::from("some multiline\nawesome text"),
         path: "".to_string(),
-        start_line: 1,
-        end_line: 1,
+        start_line: 5,
+        end_line: 7,
     }];
 
     assert_eq!(articles, expected_result);
@@ -336,6 +358,20 @@ fn turn_off_fundoc_for_whole_file() {
     let expected_result = "";
 
     let result = remove_ignored_text(file_content.to_string());
+
+    assert_eq!(result, expected_result);
+}
+
+#[test]
+fn parse_fdoc_file_check() {
+    let result = parse_fdoc_file("test", "/some/long/path/to/file.fdoc.md");
+    let expected_result = vec![Article {
+        topic: String::from("file"),
+        content: String::from("test"),
+        path: "/some/long/path/to/file.fdoc.md".to_string(),
+        start_line: 1,
+        end_line: 1,
+    }];
 
     assert_eq!(result, expected_result);
 }

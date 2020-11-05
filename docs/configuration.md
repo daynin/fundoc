@@ -38,4 +38,4 @@ If you wan't to turn fundoc on few lines below just add this comment: `fundoc-en
 
 In case when you don't write the enable-comment all text from disable comment until the end of
 the file will be ignored
-[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L65-L71)
+[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L69-L75)
