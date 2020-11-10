@@ -264,6 +264,9 @@ fn get_test_config() -> config::Config {
         comment_prefix: None,
         comment_end_string: None,
         mdbook: None,
+        book_name: None,
+        book_src: None,
+        book_build_dir: None,
     }
 }
 

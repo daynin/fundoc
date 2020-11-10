@@ -5,5 +5,11 @@
     "**/*.rs"
   ],
   "repository_host": "https://github.com/daynin/fundoc/blob/master/",
-  "mdbook": true
+  "comment_start_string": null,
+  "comment_prefix": null,
+  "comment_end_string": null,
+  "mdbook": true,
+  "book_name": "Fundoc documentation",
+  "book_src": "./",
+  "book_build_dir": "./book/"
 }

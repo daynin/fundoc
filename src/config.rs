@@ -2,6 +2,9 @@ use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::prelude::*;
 
+use dialoguer::console::Style;
+use dialoguer::{theme::ColorfulTheme, Confirm, Input};
+
 /**
  * @Article Configuration
  *
@@ -55,8 +58,14 @@ pub struct Config {
      * @Article Configuration
      *
      * `mdbook` - if true generates documentation in format of [mdBook](https://rust-lang.github.io/mdBook/index.html).
+     * `book_name` - a name of the result book.
+     * `book_src` - a directory that contains all source .md files.
+     * `book_build_dir` - a directory that contains the build result.
      */
     pub mdbook: Option<bool>,
+    pub book_name: Option<String>,
+    pub book_src: Option<String>,
+    pub book_build_dir: Option<String>,
 }
 
 /**
@@ -89,15 +98,86 @@ pub fn read_config() -> Option<Config> {
 }
 
 pub fn create_default_config() {
+    let theme = ColorfulTheme {
+        values_style: Style::new().cyan(),
+        ..ColorfulTheme::default()
+    };
+
+    let gh_username: String = Input::with_theme(&theme)
+        .with_prompt("Github username or organization")
+        .interact()
+        .unwrap();
+
+    let gh_repo: String = Input::with_theme(&theme)
+        .with_prompt("Github repository name")
+        .interact()
+        .unwrap();
+
+    let docs_folder: Option<String> = Input::with_theme(&theme)
+        .with_prompt("Docs folder")
+        .default("./docs".to_string())
+        .interact()
+        .ok();
+
+    let project_path: String = Input::with_theme(&theme)
+        .with_prompt("Project path")
+        .default("./src".to_string())
+        .interact()
+        .unwrap();
+
+    let mdbook = Confirm::with_theme(&theme)
+        .with_prompt("Use the mdBook format")
+        .default(false)
+        .interact()
+        .unwrap();
+
+    let book_name: Option<String> = if mdbook {
+        Input::with_theme(&theme)
+            .with_prompt("Book name")
+            .default(gh_repo.clone())
+            .interact()
+            .ok()
+    } else {
+        None
+    };
+
+    let book_build_dir: Option<String> = if mdbook {
+        Input::with_theme(&theme)
+            .with_prompt("Book build directory")
+            .default("./book/".to_string())
+            .interact()
+            .ok()
+    } else {
+        None
+    };
+
+    let book_src: Option<String> = if mdbook {
+        Input::with_theme(&theme)
+            .with_prompt("Book src folder")
+            .default("./".to_string())
+            .interact()
+            .ok()
+    } else {
+        None
+    };
+
+    let repository_host = Some(format!(
+        "https://github.com/{}/{}/blob/master/",
+        gh_username, gh_repo
+    ));
+
     let config = serde_json::to_string_pretty(&Config {
-        docs_folder: Some(String::from("./docs")),
-        project_path: String::from("./src"),
+        docs_folder,
+        project_path,
+        repository_host,
+        book_name,
+        book_src,
+        book_build_dir,
+        mdbook: Some(mdbook),
         files_patterns: vec![String::from("**/*.rs")],
         comment_start_string: None,
         comment_end_string: None,
         comment_prefix: None,
-        repository_host: None,
-        mdbook: Some(false),
     })
     .unwrap();
 
