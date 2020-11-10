@@ -9,7 +9,7 @@
   "comment_prefix": null,
   "comment_end_string": null,
   "mdbook": true,
-  "book_name": "Fundoc documentation",
-  "book_src": "./",
-  "book_build_dir": "./book/"
+  "book_name": "fundoc",
+  "book_src": "./docs",
+  "book_build_dir": "./book"
 }

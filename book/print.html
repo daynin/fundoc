@@ -3,10 +3,10 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title></title>
+        <title>fundoc</title>
         
+        <meta name="robots" content="noindex" />
         
-        <base href="/">
         
 
 
@@ -129,7 +129,7 @@
                         
                     </div>
 
-                    <h1 class="menu-title">Fundoc documentation</h1>
+                    <h1 class="menu-title">fundoc</h1>
 
                     <div class="right-buttons">
                         
@@ -165,8 +165,78 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#document-not-found-404" id="document-not-found-404">Document not found (404)</a></h1>
-<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
+                        <h1><a class="header" href="#syntax" id="syntax">Syntax</a></h1>
+<p>There are only two keywords for writing fundoc docstrings (for now):</p>
+<ul>
+<li><code>@Article &lt;Article name&gt;</code> for marking documentation sections to tell in which articale this section should
+be merged. You can use <code>markdown</code> syntax in documentation sections.</li>
+<li><code>@Ignore</code> for ignoring a marked documentation section.</li>
+</ul>
+<p>Example:</p>
+<pre><pre class="playground"><code class="language-rust">/**
+* @Article How it works
+*
+* # Title of the article
+*
+* Some text
+*/
+fn main() {}
+</code></pre></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L53">[~]</a></p>
+<h1><a class="header" href="#configuration" id="configuration">Configuration</a></h1>
+<p>Configuration parameters:
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L9-L11">[~]</a></p>
+<ul>
+<li><code>docs_folder</code> - a path to a folder which will contain all generated documents. It's an
+optional parameter so if you won't set it up all documents will be placed in <code>docs</code> folder in
+the working directory.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong> be careful, all files in the <code>docs_folder</code> will be replaced by documentation files.
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L16-L22">[~]</a></p>
+</blockquote>
+<ul>
+<li>
+<p><code>project_path</code> - an entry point for the parser
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L26-L28">[~]</a></p>
+</li>
+<li>
+<p><code>files_patterns</code> - unix style pathname patterns for matching files which will be parsed.
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L32-L34">[~]</a></p>
+</li>
+<li>
+<p><code>repository_host</code> - an http url which will be used for creating a link to a file in a
+repository. For example, if you want to add links to your files for each section you can pass
+a value like <code>https://github.com/user_name/project_name/blob/master</code>. It will be used for
+creating an url like this
+<code>https://github.com/user_name/project_name/blob/master/path/to/your/file.txt</code>.
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L38-L44">[~]</a></p>
+</li>
+<li>
+<p><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</p>
+</li>
+<li>
+<p><code>comment_prefix</code> - a comment line prefix. Example: *</p>
+</li>
+<li>
+<p><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L48-L52">[~]</a></p>
+</li>
+</ul>
+<p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
+<code>book_name</code> - a name of the result book.
+<code>book_src</code> - a directory that contains all source .md files.
+<code>book_build_dir</code> - a directory that contains the build result.
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L58-L63">[~]</a></p>
+<p>Fundoc will read all the configuration parameters from the <code>fundoc.json</code> config file
+which should be placed into the working directory of the programm's proccess (generally, it's a root of a
+poject)
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L72-L76">[~]</a></p>
+<p>You can diable parsing for a part of your file or a whole file by adding this comment: <code>fundoc-disable</code>.
+If you wan't to turn fundoc on few lines below just add this comment: <code>fundoc-enable</code>.</p>
+<p>In case when you don't write the enable-comment all text from disable comment until the end of
+the file will be ignored
+<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L69-L75">[~]</a></p>
 
                     </main>
 
@@ -216,6 +286,14 @@
         <!-- Custom JS scripts -->
         
 
+        
+        
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+        
         
 
     </body>

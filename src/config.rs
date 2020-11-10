@@ -144,7 +144,7 @@ pub fn create_default_config() {
     let book_build_dir: Option<String> = if mdbook {
         Input::with_theme(&theme)
             .with_prompt("Book build directory")
-            .default("./book/".to_string())
+            .default("./book".to_string())
             .interact()
             .ok()
     } else {
@@ -154,7 +154,7 @@ pub fn create_default_config() {
     let book_src: Option<String> = if mdbook {
         Input::with_theme(&theme)
             .with_prompt("Book src folder")
-            .default("./".to_string())
+            .default("./docs".to_string())
             .interact()
             .ok()
     } else {
