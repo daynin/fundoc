@@ -2,5 +2,5 @@
 authors = []
 language = "en"
 multilingual = false
-src = "./"
-title = "Fundoc documentation"
+src = "./docs_src"
+title = "fundoc"

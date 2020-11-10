@@ -13,8 +13,6 @@ struct Document {
     content: String,
 }
 
-const DEFAULT_DOCS_PATH: &str = "./docs";
-
 fn to_markdown(document: &Document) -> String {
     format!("# {}\n{}", document.title, document.content)
 }
@@ -103,7 +101,6 @@ fn write_summary(documents: &HashMap<String, Document>, docs_path: &str, mkbook:
 pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
     let docs_path = config
         .docs_folder
-        .or_else(|| Some(DEFAULT_DOCS_PATH.to_string()))
         .unwrap();
 
     let documentation = merge_docs(articles, config.repository_host);

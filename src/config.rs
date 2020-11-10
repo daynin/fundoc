@@ -59,12 +59,10 @@ pub struct Config {
      *
      * `mdbook` - if true generates documentation in format of [mdBook](https://rust-lang.github.io/mdBook/index.html).
      * `book_name` - a name of the result book.
-     * `book_src` - a directory that contains all source .md files.
      * `book_build_dir` - a directory that contains the build result.
      */
     pub mdbook: Option<bool>,
     pub book_name: Option<String>,
-    pub book_src: Option<String>,
     pub book_build_dir: Option<String>,
 }
 
@@ -113,12 +111,6 @@ pub fn create_default_config() {
         .interact()
         .unwrap();
 
-    let docs_folder: Option<String> = Input::with_theme(&theme)
-        .with_prompt("Docs folder")
-        .default("./docs".to_string())
-        .interact()
-        .ok();
-
     let project_path: String = Input::with_theme(&theme)
         .with_prompt("Project path")
         .default("./src".to_string())
@@ -130,6 +122,12 @@ pub fn create_default_config() {
         .default(false)
         .interact()
         .unwrap();
+
+    let docs_folder: Option<String> = Input::with_theme(&theme)
+        .with_prompt("Docs folder")
+        .default(if mdbook { "./docs_src" } else { "./docs" }.to_string())
+        .interact()
+        .ok();
 
     let book_name: Option<String> = if mdbook {
         Input::with_theme(&theme)
@@ -144,17 +142,7 @@ pub fn create_default_config() {
     let book_build_dir: Option<String> = if mdbook {
         Input::with_theme(&theme)
             .with_prompt("Book build directory")
-            .default("./book/".to_string())
-            .interact()
-            .ok()
-    } else {
-        None
-    };
-
-    let book_src: Option<String> = if mdbook {
-        Input::with_theme(&theme)
-            .with_prompt("Book src folder")
-            .default("./".to_string())
+            .default("./docs".to_string())
             .interact()
             .ok()
     } else {
@@ -171,7 +159,6 @@ pub fn create_default_config() {
         project_path,
         repository_host,
         book_name,
-        book_src,
         book_build_dir,
         mdbook: Some(mdbook),
         files_patterns: vec![String::from("**/*.rs")],

@@ -30,14 +30,13 @@ creating an url like this
 
 `mdbook` - if true generates documentation in format of [mdBook](https://rust-lang.github.io/mdBook/index.html).
 `book_name` - a name of the result book.
-`book_src` - a directory that contains all source .md files.
 `book_build_dir` - a directory that contains the build result.
-[[~]](https://github.com/daynin/fundoc/blob/master/src/config.rs#L58-L63)
+[[~]](https://github.com/daynin/fundoc/blob/master/src/config.rs#L58-L62)
 
 Fundoc will read all the configuration parameters from the `fundoc.json` config file
 which should be placed into the working directory of the programm's proccess (generally, it's a root of a
 poject)
-[[~]](https://github.com/daynin/fundoc/blob/master/src/config.rs#L72-L76)
+[[~]](https://github.com/daynin/fundoc/blob/master/src/config.rs#L70-L74)
 
 You can diable parsing for a part of your file or a whole file by adding this comment: `fundoc-disable`.
 If you wan't to turn fundoc on few lines below just add this comment: `fundoc-enable`.
