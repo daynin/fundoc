@@ -19,7 +19,7 @@ fn to_markdown(document: &Document) -> String {
     format!("# {}\n{}", document.title, document.content)
 }
 
-fn update_dir(path: &str) -> Result<(), std::io::Error> {
+fn recreate_dir(path: &str) -> Result<(), std::io::Error> {
     fs::remove_dir_all(path).ok();
     fs::create_dir_all(path)
 }
@@ -73,7 +73,7 @@ fn write_doc(document: &Document, docs_path: &str) {
     }
 }
 
-fn write_summary(documents: &HashMap<String, Document>, docs_path: &str) {
+fn write_summary(documents: &HashMap<String, Document>, docs_path: &str, mkbook: bool) {
     let mut content = String::from("# Summary\n\n");
 
     for key in documents.keys() {
@@ -87,7 +87,11 @@ fn write_summary(documents: &HashMap<String, Document>, docs_path: &str) {
         }
     }
 
-    match File::create(format!("{}/readme.md", docs_path)) {
+    match File::create(format!(
+        "{}/{}.md",
+        docs_path,
+        if mkbook { "SUMMARY" } else { "README" }
+    )) {
         Ok(mut file) => match file.write_all(content.as_bytes()) {
             Ok(_) => println!("Summary is created",),
             Err(_) => println!("Cannot create the summary file"),
@@ -101,10 +105,12 @@ pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
         .docs_folder
         .or_else(|| Some(DEFAULT_DOCS_PATH.to_string()))
         .unwrap();
+
     let documentation = merge_docs(articles, config.repository_host);
 
-    update_dir(&docs_path).expect("Cannot create the documentation folder");
-    write_summary(&documentation, &docs_path);
+    recreate_dir(&docs_path).expect("Cannot create the documentation folder");
+
+    write_summary(&documentation, &docs_path, config.mdbook.unwrap());
 
     for key in documentation.keys() {
         let document = documentation.get(key);

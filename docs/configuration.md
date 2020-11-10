@@ -28,10 +28,13 @@ creating an url like this
 - `comment_end_string` - a string which marks the end of a comments block. Example: \*&#47;
 [[~]](https://github.com/daynin/fundoc/blob/master/src/config.rs#L45-L49)
 
+`mdbook` - if true generates documentation in format of [mdBook](https://rust-lang.github.io/mdBook/index.html).
+[[~]](https://github.com/daynin/fundoc/blob/master/src/config.rs#L55-L57)
+
 Fundoc will read all the configuration parameters from the `fundoc.json` config file
 which should be placed into the working directory of the programm's proccess (generally, it's a root of a
 poject)
-[[~]](https://github.com/daynin/fundoc/blob/master/src/config.rs#L57-L61)
+[[~]](https://github.com/daynin/fundoc/blob/master/src/config.rs#L63-L67)
 
 You can diable parsing for a part of your file or a whole file by adding this comment: `fundoc-disable`.
 If you wan't to turn fundoc on few lines below just add this comment: `fundoc-enable`.

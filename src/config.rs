@@ -51,6 +51,12 @@ pub struct Config {
     pub comment_start_string: Option<String>,
     pub comment_prefix: Option<char>,
     pub comment_end_string: Option<String>,
+    /**
+     * @Article Configuration
+     *
+     * `mdbook` - if true generates documentation in format of [mdBook](https://rust-lang.github.io/mdBook/index.html).
+     */
+    pub mdbook: Option<bool>,
 }
 
 /**
@@ -91,6 +97,7 @@ pub fn create_default_config() {
         comment_end_string: None,
         comment_prefix: None,
         repository_host: None,
+        mdbook: Some(false),
     })
     .unwrap();
 

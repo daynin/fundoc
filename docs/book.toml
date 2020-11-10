@@ -1,0 +1,6 @@
+[book]
+authors = ["Michael-F-Bryan"]
+language = "en"
+multilingual = false
+src = "./"
+title = "My Book"

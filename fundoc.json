@@ -4,5 +4,6 @@
   "files_patterns": [
     "**/*.rs"
   ],
-  "repository_host": "https://github.com/daynin/fundoc/blob/master/"
+  "repository_host": "https://github.com/daynin/fundoc/blob/master/",
+  "mdbook": true
 }

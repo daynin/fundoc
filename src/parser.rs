@@ -263,6 +263,7 @@ fn get_test_config() -> config::Config {
         comment_start_string: None,
         comment_prefix: None,
         comment_end_string: None,
+        mdbook: None,
     }
 }
 
