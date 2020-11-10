@@ -1,5 +1,5 @@
 {
-  "docs_folder": "./docs",
+  "docs_folder": "./docs_src",
   "project_path": "./src",
   "files_patterns": [
     "**/*.rs"
@@ -10,6 +10,5 @@
   "comment_end_string": null,
   "mdbook": true,
   "book_name": "fundoc",
-  "book_src": "./docs",
-  "book_build_dir": "./book"
+  "book_build_dir": "./docs"
 }

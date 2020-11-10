@@ -5,11 +5,11 @@ use std::path::PathBuf;
 
 pub fn init_book(config: config::Config) {
     let mut book_cfg = Config::default();
-    book_cfg.book.title = config.book_name;
-    book_cfg.book.src = PathBuf::from(config.book_src.unwrap());
     book_cfg.build.build_dir = PathBuf::from(config.book_build_dir.unwrap());
+    book_cfg.book.title = config.book_name;
+    book_cfg.book.src = PathBuf::from(config.docs_folder.unwrap());
 
-    MDBook::init("./")
+    MDBook::init(PathBuf::from("./"))
         .create_gitignore(false)
         .with_config(book_cfg)
         .build()
