@@ -83,7 +83,7 @@ Or manually download it from the [releases page](https://github.com/daynin/fundo
 
 ### How to use
 
-Just create a config file (read configuration [docs here](./docs/configuration.md)), start to write docstrings in your files according to [fundoc's syntax](./docs/syntax.md), run `fundoc` to generate documentation:
+Just create a config file (read configuration [docs here](./docs_src/configuration.md)), start to write docstrings in your files according to [fundoc's syntax](./docs_src/syntax.md), run `fundoc` to generate documentation:
 
 <p align="center">
     <img src="./fundoc-work.png" />
