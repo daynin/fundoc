@@ -9,6 +9,6 @@
   "comment_prefix": null,
   "comment_end_string": null,
   "mdbook": true,
-  "book_name": "fundoc",
+  "book_name": "Fundoc",
   "book_build_dir": "./docs"
 }

@@ -99,9 +99,7 @@ fn write_summary(documents: &HashMap<String, Document>, docs_path: &str, mkbook:
 }
 
 pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
-    let docs_path = config
-        .docs_folder
-        .unwrap();
+    let docs_path = config.docs_folder.unwrap();
 
     let documentation = merge_docs(articles, config.repository_host);
 
