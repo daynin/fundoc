@@ -3,4 +3,9 @@ authors = []
 language = "en"
 multilingual = false
 src = "./docs_src"
-title = "fundoc"
+title = "Fundoc"
+
+[build]
+build-dir = "./docs"
+create-missing = true
+use-default-preprocessors = true

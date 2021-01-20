@@ -15,9 +15,7 @@ pub struct Config {
     /**
      * @Article Configuration
      *
-     * - `docs_folder` - a path to a folder which will contain all generated documents. It's an
-     * optional parameter so if you won't set it up all documents will be placed in `docs` folder in
-     * the working directory.
+     * - `docs_folder` - a path to a folder which will contain all generated documents.
      *
      * > **NOTE** be careful, all files in the `docs_folder` will be replaced by documentation files.
      */
@@ -118,7 +116,7 @@ pub fn create_default_config() {
         .unwrap();
 
     let mdbook = Confirm::with_theme(&theme)
-        .with_prompt("Use the mdBook format")
+        .with_prompt("Use mdBook format")
         .default(false)
         .interact()
         .unwrap();
