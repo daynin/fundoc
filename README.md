@@ -105,8 +105,7 @@ Fundoc supports [mdBook](https://github.com/rust-lang/mdBook), so if you want to
     <img src="./images/full-text-search.gif" />
 </p>
 
+### GitHub Action
 
-
-
-
+You can use [Fundoc's GitHub Action](https://github.com/daynin/fundoc-action) to automate documentation generation.
 
