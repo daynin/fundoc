@@ -1,4 +1,4 @@
 # Summary
 
-* [Configuration](./configuration.md)
 * [Syntax](./syntax.md)
+* [Configuration](./configuration.md)
