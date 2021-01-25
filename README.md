@@ -11,7 +11,7 @@ Fundoc's main goals:
 - A documentation generator should allow you to **write your doc-fragments in different kinds of files** like source code files (Rust, C++, TypeScript, Java, JavaScript, Ruby, Python, etc), specification files (Alloy, TLA+, etc), stylesheet files (CSS, SCSS, QT Stylesheets, etc), configs (JSON, TOML, YAML, etc).
 
 <p align="center">
-	<img src="./fundoc-example.png" />
+	<img src="./images/fundoc-example.png" />
 </p>
 
 ### Why you should use it
@@ -83,10 +83,24 @@ Or manually download it from the [releases page](https://github.com/daynin/fundo
 
 ### How to use
 
-Just create a config file (read configuration [docs here](./docs_src/configuration.md)), start to write docstrings in your files according to [fundoc's syntax](./docs_src/syntax.md), run `fundoc` to generate documentation:
+You can create a config file by executing `fundoc --init` command and answering few questions:
 
 <p align="center">
-    <img src="./fundoc-work.png" />
+    <img src="./images/fundoc-init.png" />
+</p>
+
+All Fundoc's parameters are described [here](./docs_src/configuration.md)
+
+To generate documenation run `fundoc` to generate documentation:
+
+<p align="center">
+    <img src="./images/fundoc-work.png" />
+</p>
+
+Fundoc supports [mdBook](https://github.com/rust-lang/mdBook), so if you want to generate documentation in mdBook format you can do it by setting `mdBook: true` in your config file. In can be useful if you want to use GitHub Pages with full-text search support in your project.
+
+<p align="center">
+    <img src="./images/full-text-search.gif" />
 </p>
 
 
