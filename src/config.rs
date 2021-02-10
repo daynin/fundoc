@@ -15,7 +15,7 @@ pub struct Config {
     /**
      * @Article Configuration
      *
-     * - `docs_folder` - a path to a folder which will contain all generated documents.
+     * - `docs_folder` - a path to a folder which will contain all generated documentation.
      *
      * > **NOTE** be careful, all files in the `docs_folder` will be replaced by documentation files.
      */
