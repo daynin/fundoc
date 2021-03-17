@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">1.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="syntax.html"><strong aria-hidden="true">1.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">2.</strong> Configuration</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -165,7 +165,25 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
+                        <h1 id="syntax"><a class="header" href="#syntax">Syntax</a></h1>
+<p>There are only two keywords for writing fundoc docstrings (for now):</p>
+<ul>
+<li><code>@Article &lt;Article name&gt;</code> for marking documentation sections to tell in which articale this section should
+be merged. You can use <code>markdown</code> syntax in documentation sections.</li>
+<li><code>@Ignore</code> for ignoring a marked documentation section.</li>
+</ul>
+<p>Example:</p>
+<pre><pre class="playground"><code class="language-rust">/**
+* @Article How it works
+*
+* # Title of the article
+*
+* Some text
+*/
+fn main() {}
+</code></pre></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L53">[~]</a></p>
+<h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
 <p>Configuration parameters:
 <a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L9-L11">[~]</a></p>
 <ul>
@@ -216,24 +234,6 @@ If you wan't to turn fundoc on few lines below just add this comment: <code>fund
 <p>In case when you don't write the enable-comment all text from disable comment until the end of
 the file will be ignored
 <a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L69-L75">[~]</a></p>
-<h1 id="syntax"><a class="header" href="#syntax">Syntax</a></h1>
-<p>There are only two keywords for writing fundoc docstrings (for now):</p>
-<ul>
-<li><code>@Article &lt;Article name&gt;</code> for marking documentation sections to tell in which articale this section should
-be merged. You can use <code>markdown</code> syntax in documentation sections.</li>
-<li><code>@Ignore</code> for ignoring a marked documentation section.</li>
-</ul>
-<p>Example:</p>
-<pre><pre class="playground"><code class="language-rust">/**
-* @Article How it works
-*
-* # Title of the article
-*
-* Some text
-*/
-fn main() {}
-</code></pre></pre>
-<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L53">[~]</a></p>
 
                     </main>
 
