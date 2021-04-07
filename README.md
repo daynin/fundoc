@@ -1,5 +1,5 @@
 # Fundoc 
-![Tests Status](https://github.com/daynin/fundoc/workflows/tests/badge.svg) [![Build Status](https://travis-ci.org/CSSSR/fundoc.svg?branch=master)](https://travis-ci.org/daynin/fundoc) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![GitHub Issues](https://img.shields.io/github/issues/daynin/fundoc.svg)](https://github.com/daynin/fundoc/issues)[![Crates.io](https://img.shields.io/crates/v/fundoc.svg)](https://crates.io/crates/fundoc)
+![Tests Status](https://github.com/CSSSR/fundoc/workflows/tests/badge.svg) [![Build Status](https://travis-ci.org/CSSSR/fundoc.svg?branch=master)](https://travis-ci.org/CSSSR/fundoc) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![GitHub Issues](https://img.shields.io/github/issues/CSSSR/fundoc.svg)](https://github.com/CSSSR/fundoc/issues)[![Crates.io](https://img.shields.io/crates/v/fundoc.svg)](https://crates.io/crates/fundoc)
 -
 
 <p align="center">
@@ -111,7 +111,7 @@ Fundoc supports [mdBook](https://github.com/rust-lang/mdBook), so if you want to
 
 ### GitHub Action
 
-You can use [Fundoc's GitHub Action](https://github.com/daynin/fundoc-action) to automate documentation generation.
+You can use [Fundoc's GitHub Action](https://github.com/CSSSR/fundoc-action) to automate documentation generation.
 
 ### Roadmap
 
