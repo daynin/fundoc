@@ -46,10 +46,10 @@ If you want to keep your documentation synchronised with your code and to be abl
 
 fn get_orders(params: ReqParams) {
 	/**
-	 * @ Article Orders
+	 * @Article Orders
 	 *
 	 * A description part of whole "orders" feature about logic of how to get them
-	 * /
+	 */
 	...
 	// Some code here
 }
@@ -62,10 +62,10 @@ fn get_orders(params: ReqParams) {
 
 fn validate_order(order: Order) {
 	/**
-	 * @ Article Orders
+	 * @Article Orders
 	 *
 	 * A description part of whole "orders" feature about their validation rules
-	 * /
+	 */
 	...
 	// Some code here
 }
