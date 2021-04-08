@@ -1,9 +1,26 @@
-# Fundoc 
-![Tests Status](https://github.com/CSSSR/fundoc/workflows/tests/badge.svg) [![Build Status](https://travis-ci.org/CSSSR/fundoc.svg?branch=master)](https://travis-ci.org/CSSSR/fundoc) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![GitHub Issues](https://img.shields.io/github/issues/CSSSR/fundoc.svg)](https://github.com/CSSSR/fundoc/issues)[![Crates.io](https://img.shields.io/crates/v/fundoc.svg)](https://crates.io/crates/fundoc)
--
+<p align="center">
+  <a href="https://github.com/CSSSR/fundoc">
+    <img src="./images/logo.png" height="200px"/>
+  </a>
+</p>
+
+<h2 align="center">
+    Language agnostic documentation generator. Written in Rust 🦀
+</h2>
 
 <p align="center">
-    <img src="./images/logo.png" height="200px"/>
+  <a href="https://travis-ci.org/CSSSR/fundoc">
+    <img alt="Tests Status" src="https://github.com/CSSSR/fundoc/workflows/tests/badge.svg">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg">
+  </a>
+  <a href="https://github.com/CSSSR/fundoc/issues">
+    <img alt="GitHub Issues" src="https://img.shields.io/github/issues/CSSSR/fundoc.svg">
+  </a>
+  <a href="https://crates.io/crates/fundoc">
+    <img alt="Crates.io" src="https://img.shields.io/crates/v/fundoc.svg">
+  </a>
 </p>
 
 **Fundoc** - the right way to generate documentation. Business features in your project can be implemented in different files and even in different technologies. Fundoc can merge all descriptions of those features and put them in appropriate files.
@@ -76,7 +93,7 @@ You can install fundoc by executing this shell script:
 
 ```bash
 curl -LSfs https://japaric.github.io/trust/install.sh | \
-    sh -s -- --git daynin/fundoc
+    sh -s -- --git CSSSR/fundoc
 ```
 
 If you're rust developer and you have had rust compiler installed, you can install fundoc from [crates.io](https://crates.io/):
@@ -85,7 +102,7 @@ If you're rust developer and you have had rust compiler installed, you can insta
 cargo install fundoc
 ```
 
-Or manually download it from the [releases page](https://github.com/daynin/fundoc/releases).
+Or manually download it from the [releases page](https://github.com/CSSSR/fundoc/releases).
 
 ### How to use
 
