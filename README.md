@@ -12,7 +12,7 @@
   <a href="https://travis-ci.org/CSSSR/fundoc">
     <img alt="Tests Status" src="https://github.com/CSSSR/fundoc/workflows/tests/badge.svg">
   </a>
-  <a href="https://opensource.org/licenses/MIT">
+  <a href="https://github.com/CSSSR/fundoc/blob/master/LICENSE">
     <img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg">
   </a>
   <a href="https://github.com/CSSSR/fundoc/issues">
