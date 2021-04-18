@@ -200,8 +200,7 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                 is_comment_section = false;
                 current_article = new_article();
             } else if is_article_section {
-                let trimmed_content = trim_article_line(line.to_string(), comment_symbol);
-
+                let trimmed_content = line.replace(format!(" {} ", comment_symbol).as_str(), "");
                 current_article.content += format!("{}\n", trimmed_content).as_str();
             }
         }
@@ -377,4 +376,61 @@ fn parse_fdoc_file_check() {
     }];
 
     assert_eq!(result, expected_result);
+}
+
+#[test]
+fn parse_articles_with_code_blocks_with_identation() {
+    let file_content = "
+use std::io::prelude::*;
+
+/**
+ * @Article Test article
+ * ```rust
+ * fn main() {
+ *     println!(\"Hello world!\");
+ * }
+ * ```
+ */
+pub fn test () {}
+  ";
+
+    let articles = parse_file(file_content, "", get_test_config());
+    let expected_result = vec![Article {
+        topic: String::from("Test article"),
+        content: String::from("```rust\nfn main() {\n    println!(\"Hello world!\");\n}\n```"),
+        path: "".to_string(),
+        start_line: 5,
+        end_line: 10,
+    }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn parse_articles_with_markdown_lists() {
+    let file_content = "
+use std::io::prelude::*;
+
+/**
+ * @Article Test article
+ * List:
+ * * Item 1
+ * * Item 2
+ *
+ *   Item 2 subtext
+ * * Item 3
+ */
+pub fn test () {}
+  ";
+
+    let articles = parse_file(file_content, "", get_test_config());
+    let expected_result = vec![Article {
+        topic: String::from("Test article"),
+        content: String::from("List:\n* Item 1\n* Item 2\n *\n  Item 2 subtext\n* Item 3"),
+        path: "".to_string(),
+        start_line: 5,
+        end_line: 11,
+    }];
+
+    assert_eq!(articles, expected_result);
 }
