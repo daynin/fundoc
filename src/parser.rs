@@ -344,41 +344,6 @@ fn remove_ignored_text_from_file_content() {
 }
 
 #[test]
-fn turn_off_and_on_fundoc() {
-    let file_content =
-        "fn some_fun() {}\n// fundoc-disable\nsome code here\n// fundoc-enable\ntest";
-    let expected_result = "fn some_fun() {}\ntest";
-
-    let result = remove_ignored_text(file_content.to_string());
-
-    assert_eq!(result, expected_result);
-}
-
-#[test]
-fn turn_off_fundoc_for_whole_file() {
-    let file_content = "// fundoc-disable\nfn some_fun() {}\nsome code here\ntest";
-    let expected_result = "";
-
-    let result = remove_ignored_text(file_content.to_string());
-
-    assert_eq!(result, expected_result);
-}
-
-#[test]
-fn parse_fdoc_file_check() {
-    let result = parse_fdoc_file("test", "/some/long/path/to/file.fdoc.md");
-    let expected_result = vec![Article {
-        topic: String::from("file"),
-        content: String::from("test"),
-        path: "/some/long/path/to/file.fdoc.md".to_string(),
-        start_line: 1,
-        end_line: 1,
-    }];
-
-    assert_eq!(result, expected_result);
-}
-
-#[test]
 fn parse_articles_with_code_blocks_with_identation() {
     let file_content = "
 use std::io::prelude::*;
@@ -433,4 +398,39 @@ pub fn test () {}
     }];
 
     assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn turn_off_and_on_fundoc() {
+    let file_content =
+        "fn some_fun() {}\n// fundoc-disable\nsome code here\n// fundoc-enable\ntest";
+    let expected_result = "fn some_fun() {}\ntest";
+
+    let result = remove_ignored_text(file_content.to_string());
+
+    assert_eq!(result, expected_result);
+}
+
+#[test]
+fn turn_off_fundoc_for_whole_file() {
+    let file_content = "// fundoc-disable\nfn some_fun() {}\nsome code here\ntest";
+    let expected_result = "";
+
+    let result = remove_ignored_text(file_content.to_string());
+
+    assert_eq!(result, expected_result);
+}
+
+#[test]
+fn parse_fdoc_file_check() {
+    let result = parse_fdoc_file("test", "/some/long/path/to/file.fdoc.md");
+    let expected_result = vec![Article {
+        topic: String::from("file"),
+        content: String::from("test"),
+        path: "/some/long/path/to/file.fdoc.md".to_string(),
+        start_line: 1,
+        end_line: 1,
+    }];
+
+    assert_eq!(result, expected_result);
 }
