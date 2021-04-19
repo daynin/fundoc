@@ -200,12 +200,14 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                 is_comment_section = false;
                 current_article = new_article();
             } else if is_article_section {
-                let empty_comment_line = format!(" {} ", comment_symbol);
-                let trimmed_content = if line.starts_with(empty_comment_line.as_str()) {
-                    line.replace(empty_comment_line.as_str(), "")
+                let empty_comment_line = format!("{} ", comment_symbol);
+                let trimmed_line = line.trim_start();
+
+                let trimmed_content = if trimmed_line.starts_with(empty_comment_line.as_str()) {
+                    trimmed_line.get(2..)
                 } else {
-                    line.replace(empty_comment_line.trim_end(), "")
-                };
+                    trimmed_line.get(1..)
+                }.unwrap();
 
                 current_article.content += format!("{}\n", trimmed_content).as_str();
             }
@@ -377,6 +379,39 @@ pub fn test () {}
         content: String::from("```rust\nfn main() {\n    println!(\"Hello world!\");\n}\n```\n\n```rust\nfn test() {\n    println!(\"Hello world!\");\n}\n```"),
         path: "".to_string(),
         start_line: 5,
+        end_line: 16,
+    }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn parse_documentation_with_identation_before_comments() {
+    let file_content = "
+     /**
+     * @Article Test article
+     * #### [no-implicit-coercion](https://eslint.org/docs/rules/no-implicit-coercion)
+     * All implicit coercions except `!!` are disallowed:
+     * ```js
+     * // Fail
+     * +foo
+     * 1 * foo
+     * '' + foo
+     * `${foo}`
+     * ~foo.indexOf(bar)
+     *
+     * // Pass
+     * !!foo
+     * ```
+     */
+  ";
+
+    let articles = parse_file(file_content, "", get_test_config());
+    let expected_result = vec![Article {
+        topic: String::from("Test article"),
+        content: String::from("#### [no-implicit-coercion](https://eslint.org/docs/rules/no-implicit-coercion)\nAll implicit coercions except `!!` are disallowed:\n```js\n// Fail\n+foo\n1 * foo\n\'\' + foo\n`${foo}`\n~foo.indexOf(bar)\n\n// Pass\n!!foo\n```"),
+        path: "".to_string(),
+        start_line: 3,
         end_line: 16,
     }];
 
