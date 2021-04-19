@@ -200,7 +200,13 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                 is_comment_section = false;
                 current_article = new_article();
             } else if is_article_section {
-                let trimmed_content = line.replace(format!(" {} ", comment_symbol).as_str(), "");
+                let empty_comment_line = format!(" {} ", comment_symbol);
+                let trimmed_content = if line.starts_with(empty_comment_line.as_str()) {
+                    line.replace(empty_comment_line.as_str(), "")
+                } else {
+                    line.replace(empty_comment_line.trim_end(), "")
+                };
+
                 current_article.content += format!("{}\n", trimmed_content).as_str();
             }
         }
@@ -355,6 +361,12 @@ use std::io::prelude::*;
  *     println!(\"Hello world!\");
  * }
  * ```
+ *
+ * ```rust
+ * fn test() {
+ *     println!(\"Hello world!\");
+ * }
+ * ```
  */
 pub fn test () {}
   ";
@@ -362,10 +374,10 @@ pub fn test () {}
     let articles = parse_file(file_content, "", get_test_config());
     let expected_result = vec![Article {
         topic: String::from("Test article"),
-        content: String::from("```rust\nfn main() {\n    println!(\"Hello world!\");\n}\n```"),
+        content: String::from("```rust\nfn main() {\n    println!(\"Hello world!\");\n}\n```\n\n```rust\nfn test() {\n    println!(\"Hello world!\");\n}\n```"),
         path: "".to_string(),
         start_line: 5,
-        end_line: 10,
+        end_line: 16,
     }];
 
     assert_eq!(articles, expected_result);
@@ -391,7 +403,7 @@ pub fn test () {}
     let articles = parse_file(file_content, "", get_test_config());
     let expected_result = vec![Article {
         topic: String::from("Test article"),
-        content: String::from("List:\n* Item 1\n* Item 2\n *\n  Item 2 subtext\n* Item 3"),
+        content: String::from("List:\n* Item 1\n* Item 2\n\n  Item 2 subtext\n* Item 3"),
         path: "".to_string(),
         start_line: 5,
         end_line: 11,
