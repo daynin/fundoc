@@ -207,7 +207,8 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                     trimmed_line.get(2..)
                 } else {
                     trimmed_line.get(1..)
-                }.unwrap();
+                }
+                .unwrap();
 
                 current_article.content += format!("{}\n", trimmed_content).as_str();
             }
