@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="test_article.html"><strong aria-hidden="true">1.</strong> Test article</a></li><li class="chapter-item expanded "><a href="syntax.html" class="active"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Configuration</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">1.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="test_article.html"><strong aria-hidden="true">2.</strong> Test article</a></li><li class="chapter-item expanded "><a href="syntax.html" class="active"><strong aria-hidden="true">3.</strong> Syntax</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -164,22 +164,34 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="syntax"><a class="header" href="#syntax">Syntax</a></h1>
-<p>There are only two keywords for writing fundoc docstrings (for now):</p>
+<ul>
+<li>There are only two keywords for writing fundoc docstrings (for now):
+<ul>
+<li></li>
+</ul>
 <ul>
 <li><code>@Article &lt;Article name&gt;</code> for marking documentation sections to tell in which articale this section should
 be merged. You can use <code>markdown</code> syntax in documentation sections.</li>
 <li><code>@Ignore</code> for ignoring a marked documentation section.</li>
 </ul>
-<p>Example:</p>
+<ul>
+<li></li>
+</ul>
+Example:
+<ul>
+<li></li>
+</ul>
 <pre><pre class="playground"><code class="language-rust">/**
-* @Article How it works
-*
-* # Title of the article
-*
-* Some text
-*/
+@Article How it works
+ *
+<span class="boring">Title of the article
+</span> *
+Some text
+ */
 fn main() {}
 </code></pre></pre>
+</li>
+</ul>
 <p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L53">[~]</a></p>
 
                     </main>
@@ -192,10 +204,6 @@ fn main() {}
                             </a>
                         
 
-                        
-                            <a rel="next" href="configuration.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
                         
 
                         <div style="clear: both"></div>
@@ -210,10 +218,6 @@ fn main() {}
                     </a>
                 
 
-                
-                    <a rel="next" href="configuration.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
                 
             </nav>
 
