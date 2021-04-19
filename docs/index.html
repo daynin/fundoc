@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Test article - Fundoc</title>
+        <title>Configuration - Fundoc</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="test_article.html"><strong aria-hidden="true">1.</strong> Test article</a></li><li class="chapter-item expanded "><a href="syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Configuration</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">1.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="test_article.html"><strong aria-hidden="true">2.</strong> Test article</a></li><li class="chapter-item expanded "><a href="syntax.html"><strong aria-hidden="true">3.</strong> Syntax</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -163,22 +163,78 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="test-article"><a class="header" href="#test-article">Test article</a></h1>
-<pre><pre class="playground"><code class="language-rust">fn main() {
-println!(\&quot;Hello world!\&quot;);
-}
-</code></pre></pre>
-<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L290-L295">[~]</a></p>
-<p>List:</p>
+                        <h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
 <ul>
-<li>Item 1</li>
-<li>Item 2</li>
+<li></li>
 </ul>
-<p>Item 2 subtext</p>
+<p>Configuration parameters:
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L9-L11">[~]</a></p>
 <ul>
-<li>Item 3
-<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L318-L324">[~]</a></li>
+<li>
+<ul>
+<li><code>docs_folder</code> - a path to a folder which will contain all generated documents.</li>
 </ul>
+<ul>
+<li></li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong> be careful, all files in the <code>docs_folder</code> will be replaced by documentation files.
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L16-L20">[~]</a></p>
+</blockquote>
+</li>
+<li>
+<ul>
+<li><code>project_path</code> - an entry point for the parser
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L24-L26">[~]</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><code>files_patterns</code> - unix style pathname patterns for matching files which will be parsed.
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L30-L32">[~]</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><code>repository_host</code> - an http url which will be used for creating a link to a file in a
+repository. For example, if you want to add links to your files for each section you can pass
+a value like <code>https://github.com/user_name/project_name/blob/master</code>. It will be used for
+creating an url like this
+<code>https://github.com/user_name/project_name/blob/master/path/to/your/file.txt</code>.
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L36-L42">[~]</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</li>
+<li><code>comment_prefix</code> - a comment line prefix. Example: *</li>
+<li><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L46-L50">[~]</a></li>
+</ul>
+</li>
+<li>
+<p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
+<code>book_name</code> - a name of the result book.
+<code>book_build_dir</code> - a directory that contains the build result.
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L56-L60">[~]</a></p>
+</li>
+<li></li>
+</ul>
+<p>Fundoc will read all the configuration parameters from the <code>fundoc.json</code> config file
+which should be placed into the working directory of the programm's proccess (generally, it's a root of a
+poject)
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L68-L72">[~]</a></p>
+<ul>
+<li></li>
+</ul>
+<p>You can diable parsing for a part of your file or a whole file by adding this comment: <code>fundoc-disable</code>.
+If you wan't to turn fundoc on few lines below just add this comment: <code>fundoc-enable</code>.</p>
+<ul>
+<li></li>
+</ul>
+<p>In case when you don't write the enable-comment all text from disable comment until the end of
+the file will be ignored
+<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L69-L75">[~]</a></p>
 
                     </main>
 
@@ -187,7 +243,7 @@ println!(\&quot;Hello world!\&quot;);
                         
 
                         
-                            <a rel="next" href="syntax.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="test_article.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -201,7 +257,7 @@ println!(\&quot;Hello world!\&quot;);
                 
 
                 
-                    <a rel="next" href="syntax.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="test_article.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
