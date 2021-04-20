@@ -169,13 +169,13 @@
 <p>Configuration parameters:
 <a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L9-L11">[~]</a></p>
 <ul>
-<li>
-<p><code>docs_folder</code> - a path to a folder which will contain all generated documents.</p>
+<li><code>docs_folder</code> - a path to a folder which will contain all generated documents.</li>
+</ul>
 <blockquote>
-<p><em>NOTE</em>* be careful, all files in the <code>docs_folder</code> will be replaced by documentation files.
+<p><strong>NOTE</strong> be careful, all files in the <code>docs_folder</code> will be replaced by documentation files.
 <a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L16-L20">[~]</a></p>
 </blockquote>
-</li>
+<ul>
 <li>
 <p><code>project_path</code> - an entry point for the parser
 <a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L24-L26">[~]</a></p>
@@ -194,11 +194,13 @@ creating an url like this
 </li>
 <li>
 <p><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</p>
-<ul>
-<li><code>comment_prefix</code> - a comment line prefix. Example: *</li>
-<li><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L46-L50">[~]</a></li>
-</ul>
+</li>
+<li>
+<p><code>comment_prefix</code> - a comment line prefix. Example: *</p>
+</li>
+<li>
+<p><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L46-L50">[~]</a></p>
 </li>
 </ul>
 <p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
@@ -216,23 +218,21 @@ the file will be ignored
 <a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L69-L75">[~]</a></p>
 <h1 id="syntax"><a class="header" href="#syntax">Syntax</a></h1>
 <p>There are only two keywords for writing fundoc docstrings (for now):</p>
-<pre><code> - `@Article &lt;Article name&gt;` for marking documentation sections to tell in which articale this section should
- be merged. You can use `markdown` syntax in documentation sections.
- - `@Ignore` for ignoring a marked documentation section.
-
- Example:
-
- ```rust
- /**
-  @Article How it works
- 
-  # Title of the article
- 
-  Some text
- /
- fn main() {}
- ```
-</code></pre>
+<ul>
+<li><code>@Article &lt;Article name&gt;</code> for marking documentation sections to tell in which articale this section should
+be merged. You can use <code>markdown</code> syntax in documentation sections.</li>
+<li><code>@Ignore</code> for ignoring a marked documentation section.</li>
+</ul>
+<p>Example:</p>
+<pre><pre class="playground"><code class="language-rust">/**
+ * @Article How it works
+ *
+ * # Title of the article
+ *
+ * Some text
+ */
+fn main() {}
+</code></pre></pre>
 <p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L53">[~]</a></p>
 
                     </main>
