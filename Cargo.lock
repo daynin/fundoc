@@ -327,7 +327,7 @@ checksum = "3dcaa9ae7725d12cdb85b3ad99a434db70b468c09ded17e012d86b5c1010f7a7"
 
 [[package]]
 name = "fundoc"
-version = "0.2.5"
+version = "0.2.6"
 dependencies = [
  "ansi_term 0.12.1",
  "clap",

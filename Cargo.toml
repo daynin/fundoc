@@ -1,13 +1,13 @@
 [package]
 name = "fundoc"
-version = "0.2.5"
+version = "0.2.6"
 authors = ["Sergey Golovin <golovim@gmail.com>"]
 edition = "2018"
 license = "MIT"
 description = "The right tool for documentation generating"
 readme = "README.md"
-homepage = "https://github.com/daynin/fundoc"
-repository = "https://github.com/daynin/fundoc"
+homepage = "https://github.com/CSSSR/fundoc"
+repository = "https://github.com/CSSSR/fundoc"
 keywords = ["cli", "documentation", "generator"]
 categories = ["command-line-utilities"]
 
