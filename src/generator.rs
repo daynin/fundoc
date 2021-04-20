@@ -71,10 +71,12 @@ fn write_doc(document: &Document, docs_path: &str) {
     }
 }
 
-fn write_summary(documents: &HashMap<String, Document>, docs_path: &str, mkbook: bool) {
+fn create_summary(documents: &HashMap<String, Document>) -> String {
     let mut content = String::from("# Summary\n\n");
+    let mut keys = documents.keys().collect::<Vec<_>>();
+    keys.sort();
 
-    for key in documents.keys() {
+    for key in keys {
         let document = documents.get(key);
 
         match document {
@@ -85,12 +87,16 @@ fn write_summary(documents: &HashMap<String, Document>, docs_path: &str, mkbook:
         }
     }
 
+    content
+}
+
+fn write_summary(documents: &HashMap<String, Document>, docs_path: &str, mdbook: bool) {
     match File::create(format!(
         "{}/{}.md",
         docs_path,
-        if mkbook { "SUMMARY" } else { "README" }
+        if mdbook { "SUMMARY" } else { "README" }
     )) {
-        Ok(mut file) => match file.write_all(content.as_bytes()) {
+        Ok(mut file) => match file.write_all(create_summary(documents).as_bytes()) {
             Ok(_) => println!("Summary is created",),
             Err(_) => println!("Cannot create the summary file"),
         },
@@ -115,4 +121,40 @@ pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
             None => println!("Cannot find the document"),
         }
     }
+}
+
+#[test]
+fn create_sorted_summary() {
+    let mut documents: HashMap<String, Document> = HashMap::new();
+
+    documents.insert(
+        "b".to_string(),
+        Document {
+            title: "b".to_string(),
+            file_name: "".to_string(),
+            content: "".to_string(),
+        },
+    );
+
+    documents.insert(
+        "a".to_string(),
+        Document {
+            title: "a".to_string(),
+            file_name: "".to_string(),
+            content: "".to_string(),
+        },
+    );
+
+    documents.insert(
+        "c".to_string(),
+        Document {
+            title: "c".to_string(),
+            file_name: "".to_string(),
+            content: "".to_string(),
+        },
+    );
+
+    let result = create_summary(&documents);
+
+    assert_eq!(result, "# Summary\n\n* [a](./)\n* [b](./)\n* [c](./)\n");
 }
