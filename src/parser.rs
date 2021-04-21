@@ -208,7 +208,7 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                 } else {
                     trimmed_line.get(1..)
                 }
-                .unwrap();
+                .unwrap_or("");
 
                 current_article.content += format!("{}\n", trimmed_content).as_str();
             }
@@ -443,6 +443,29 @@ pub fn test () {}
         path: "".to_string(),
         start_line: 5,
         end_line: 11,
+    }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn ignore_empty_lines() {
+    let file_content = "
+use std::io::prelude::*;
+
+/**
+@Article Test article
+
+*/
+    ";
+
+    let articles = parse_file(file_content, "", get_test_config());
+    let expected_result = vec![Article {
+        topic: String::from("Test article"),
+        content: String::from(""),
+        path: "".to_string(),
+        start_line: 5,
+        end_line: 6,
     }];
 
     assert_eq!(articles, expected_result);
