@@ -15,7 +15,7 @@ jobs:
       uses: actions/setup-node@v1
     - name: Install github-release-notes and generate changelog
       run: |
-        npx github-release-notes changelog --generate --override --token=${{ secrets.CHANGELOG_TOKEN }} --changelog-filename=TEMP_CHANGELOG.md
+        npx github-release-notes@0.17.1 changelog --generate --override --token=${{ secrets.CHANGELOG_TOKEN }} --changelog-filename=TEMP_CHANGELOG.md
       env:
         CI: true
     - name: Create and publish realese
