@@ -3,6 +3,7 @@ mod cli;
 mod config;
 mod generator;
 mod parser;
+use std::fs;
 
 use ansi_term::Colour;
 
@@ -37,8 +38,10 @@ fn main() {
                 println!("{}", Colour::Green.bold().paint("Done!"));
 
                 if is_mdbook {
-                    book::init_book(config);
+                    book::init_book(config.clone());
                     book::build_book();
+
+                    fs::remove_dir_all(config.docs_folder.unwrap()).ok();
                 }
             }
             None => println!("Cannot find the config file"),
