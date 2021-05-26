@@ -105,7 +105,7 @@ enum Keywords {
     Ignore,
     /**
      * @Article Syntax
-     * `@CodeBlockStart` and `@CodeBlockEnd` allow to include code from a current file as an
+     * `@CodeBlockStart <Programming Language>` and `@CodeBlockEnd` allow to include code from a current file as an
      * example.
      *
      * Example:
