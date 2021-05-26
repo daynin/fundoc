@@ -136,13 +136,15 @@
                         </a>
                         
                         
+                        
+
                     </div>
                 </div>
 
                 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -163,7 +165,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#syntax" id="syntax">Syntax</a></h1>
+                        <h1 id="syntax"><a class="header" href="#syntax">Syntax</a></h1>
 <p>There are only two keywords for writing fundoc docstrings (for now):</p>
 <ul>
 <li><code>@Article &lt;Article name&gt;</code> for marking documentation sections to tell in which articale this section should
@@ -171,18 +173,16 @@ be merged. You can use <code>markdown</code> syntax in documentation sections.</
 <li><code>@Ignore</code> for ignoring a marked documentation section.</li>
 </ul>
 <p>Example:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>/**
+<pre><pre class="playground"><code class="language-rust">/**
  * @Article How it works
  *
  * # Title of the article
  *
  * Some text
-[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L50)
-<span class="boring">}
-</span></code></pre></pre>
+ */
+fn main() {}
+</code></pre></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L53">[~]</a></p>
 
                     </main>
 
