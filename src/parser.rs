@@ -184,7 +184,7 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
     for line in file_content.lines() {
         if line.trim().starts_with(start_comment) {
             is_comment_section = true;
-        } else if line.trim().starts_with(end_comment) {
+        } else if line.trim().ends_with(end_comment) {
             is_comment_section = false;
             if is_article_section {
                 is_article_section = false;
@@ -483,6 +483,29 @@ fn parse_comments_without_comment_prefixes() {
 @Article Test article
 test
 */
+";
+
+    let articles = parse_file(file_content, "", get_test_config());
+    let expected_result = vec![Article {
+        topic: String::from("Test article"),
+        content: String::from("test"),
+        path: "".to_string(),
+        start_line: 3,
+        end_line: 4,
+    }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn parse_different_types_of_commnet_endings() {
+    let file_content = "
+/**
+ * @Article Test article
+ * test
+ * */
+const a = 1
+const b = 2
 ";
 
     let articles = parse_file(file_content, "", get_test_config());
