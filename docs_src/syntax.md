@@ -66,7 +66,7 @@ fn parse_files() {}
 `@Ignore` is for ignoring a marked documentation section.
 [[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L102-L103)
 
-`@CodeBlockStart` and `@CodeBlockEnd` allow to include code from a current file as an
+`@CodeBlockStart <Programming Language>` and `@CodeBlockEnd` allow to include code from a current file as an
 example.
 
 Example:
