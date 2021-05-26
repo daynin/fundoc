@@ -103,6 +103,27 @@ enum Keywords {
      * `@Ignore` is for ignoring a marked documentation section.
      */
     Ignore,
+    /**
+     * @Article Syntax
+     * `@CodeBlockStart` and `@CodeBlockEnd` allow to include code from a current file as an
+     * example.
+     *
+     * Example:
+     *
+     * ```rust
+     * /**
+     * * @Article Usage examples
+     * * Here you can see a function call:
+     * * @CodeBlockStart rust
+     * */
+     * calc_size(item)
+     * /**
+     * * @CodeBlockEnd
+     * */
+     * ```
+     */
+    CodeBlockStart,
+    CodeBlockEnd,
 }
 
 impl Keywords {
@@ -111,6 +132,8 @@ impl Keywords {
             Keywords::Article => "@Article",
             Keywords::FileArticle => "@FileArticle",
             Keywords::Ignore => "@Ignore",
+            Keywords::CodeBlockStart => "@CodeBlockStart",
+            Keywords::CodeBlockEnd => "@CodeBlockEnd",
         }
     }
 }
@@ -230,12 +253,13 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
     let mut current_article: Article = new_article();
     let mut is_comment_section = false;
     let mut is_article_section = false;
+    let mut code_block = String::from("");
     let mut file_global_topic = String::from("");
 
     for line in file_content.lines() {
         if line.trim().starts_with(start_comment) {
             is_comment_section = true;
-        } else if line.trim().ends_with(end_comment) {
+        } else if line.trim().ends_with(end_comment) && code_block.is_empty() {
             is_comment_section = false;
             if is_article_section {
                 is_article_section = false;
@@ -252,36 +276,46 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
         if is_comment_section {
             let trimmed_line = trim_article_line(line.to_string(), comment_symbol);
 
-            match trimmed_line {
-                _ if trimmed_line.starts_with(Keywords::FileArticle.as_str()) => {
-                    file_global_topic = trim_article_line(
-                        line.replace(Keywords::FileArticle.as_str(), ""),
-                        comment_symbol,
-                    );
-                }
-                _ if !file_global_topic.is_empty() && !is_article_section => {
-                    current_article.topic = file_global_topic.clone();
-                    current_article.start_line = line_number;
-                    is_article_section = true;
-                }
-                _ if trimmed_line.starts_with(Keywords::Article.as_str()) => {
-                    let topic = line.replace(Keywords::Article.as_str(), "");
+            if trimmed_line.starts_with(Keywords::FileArticle.as_str()) {
+                file_global_topic = trim_article_line(
+                    line.replace(Keywords::FileArticle.as_str(), ""),
+                    comment_symbol,
+                );
+            } else if !file_global_topic.is_empty() && !is_article_section {
+                current_article.topic = file_global_topic.clone();
+                current_article.start_line = line_number;
+                is_article_section = true;
+            } else if trimmed_line.starts_with(Keywords::Article.as_str()) {
+                let topic = line.replace(Keywords::Article.as_str(), "");
 
-                    current_article.topic = trim_article_line(topic, comment_symbol);
-                    current_article.start_line = line_number;
-                    is_article_section = true;
-                }
-                _ if trimmed_line.starts_with(Keywords::Ignore.as_str()) => {
-                    is_article_section = false;
-                    is_comment_section = false;
-                    current_article = new_article();
-                }
-                _ if is_article_section => {
-                    current_article.content +=
-                        format!("{}\n", parse_text(line, comment_symbol)).as_str();
-                }
-                _ => {}
-            };
+                current_article.topic = trim_article_line(topic, comment_symbol);
+                current_article.start_line = line_number;
+                is_article_section = true;
+            } else if trimmed_line.starts_with(Keywords::Ignore.as_str()) {
+                is_article_section = false;
+                is_comment_section = false;
+                current_article = new_article();
+            } else if trimmed_line.starts_with(Keywords::CodeBlockStart.as_str()) {
+                code_block = trim_article_line(
+                    line.replace(Keywords::CodeBlockStart.as_str(), ""),
+                    comment_symbol,
+                );
+                current_article.content += format!("```{}", code_block).as_str();
+            } else if trimmed_line.contains(Keywords::CodeBlockEnd.as_str()) {
+                code_block = "".to_string();
+                current_article.content += "```";
+                is_comment_section = false;
+                is_article_section = false;
+
+                current_article.path = file_path.to_string();
+                current_article.end_line = line_number - 1;
+                articles.push(current_article);
+
+                current_article = new_article();
+            } else if is_article_section {
+                current_article.content +=
+                    format!("{}\n", parse_text(line, comment_symbol)).as_str();
+            }
         }
 
         line_number += 1;
@@ -649,6 +683,30 @@ fn ignore_sections_in_case_of_global_article() {
         content: String::from("test"),
         path: "".to_string(),
         start_line: 6,
+        end_line: 7,
+    }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn add_real_code_from_parsed_files() {
+    let file_content = "
+/**
+ * @Article Test article
+ * Request timeout:
+ * @CodeBlockStart js
+ */
+const TIMEOUT = 3000
+/** @CodeBlockEnd */
+";
+
+    let articles = parse_file(file_content, "", get_test_config());
+    let expected_result = vec![Article {
+        topic: String::from("Test article"),
+        content: String::from("Request timeout:\n```js/\nconst TIMEOUT = 3000\n```"),
+        path: "".to_string(),
+        start_line: 3,
         end_line: 7,
     }];
 
