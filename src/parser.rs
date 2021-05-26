@@ -148,6 +148,20 @@ fn parse_fdoc_file(file_content: &str, file_path: &str) -> Vec<Article> {
     }]
 }
 
+fn parse_text(line: &str, comment_symbol: char) -> &str {
+    let empty_comment_line = format!("{} ", comment_symbol);
+    let trimmed_line = line.trim_start();
+
+    if trimmed_line.starts_with(empty_comment_line.as_str()) {
+        trimmed_line.get(2..)
+    } else if trimmed_line.starts_with(' ') || trimmed_line.starts_with(comment_symbol) {
+        trimmed_line.get(1..)
+    } else {
+        Some(trimmed_line)
+    }
+    .unwrap_or("")
+}
+
 fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Vec<Article> {
     if file_path.ends_with(".fdoc.md") {
         return parse_fdoc_file(file_content, file_path);
@@ -200,17 +214,8 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                 is_comment_section = false;
                 current_article = new_article();
             } else if is_article_section {
-                let empty_comment_line = format!("{} ", comment_symbol);
-                let trimmed_line = line.trim_start();
-
-                let trimmed_content = if trimmed_line.starts_with(empty_comment_line.as_str()) {
-                    trimmed_line.get(2..)
-                } else {
-                    trimmed_line.get(1..)
-                }
-                .unwrap_or("");
-
-                current_article.content += format!("{}\n", trimmed_content).as_str();
+                current_article.content +=
+                    format!("{}\n", parse_text(line, comment_symbol)).as_str();
             }
         }
 
@@ -466,6 +471,27 @@ use std::io::prelude::*;
         path: "".to_string(),
         start_line: 5,
         end_line: 6,
+    }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn parse_comments_without_comment_prefixes() {
+    let file_content = "
+/**
+@Article Test article
+test
+*/
+";
+
+    let articles = parse_file(file_content, "", get_test_config());
+    let expected_result = vec![Article {
+        topic: String::from("Test article"),
+        content: String::from("test"),
+        path: "".to_string(),
+        start_line: 3,
+        end_line: 4,
     }];
 
     assert_eq!(articles, expected_result);
