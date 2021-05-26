@@ -217,14 +217,10 @@ poject)
 If you wan't to turn fundoc on few lines below just add this comment: <code>fundoc-enable</code>.</p>
 <p>In case when you don't write the enable-comment all text from disable comment until the end of
 the file will be ignored
-<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L69-L75">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L142-L148">[~]</a></p>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="syntax"><a class="header" href="#syntax">Syntax</a></h1>
-<p>There are only two keywords for writing fundoc docstrings (for now):</p>
-<ul>
-<li><code>@Article &lt;Article name&gt;</code> for marking documentation sections to tell in which articale this section should
-be merged. You can use <code>markdown</code> syntax in documentation sections.</li>
-<li><code>@Ignore</code> for ignoring a marked documentation section.</li>
-</ul>
+<p><code>@Article &lt;Article name&gt;</code> is for marking documentation sections to tell in which articale this section should
+be merged. You can use <code>markdown</code> syntax in documentation sections.</p>
 <p>Example:</p>
 <pre><pre class="playground"><code class="language-rust">/**
  * @Article How it works
@@ -235,7 +231,65 @@ be merged. You can use <code>markdown</code> syntax in documentation sections.</
  */
 fn main() {}
 </code></pre></pre>
-<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L53">[~]</a></p>
+<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L50">[~]</a></p>
+<p><code>@FileArtcile</code> allows you to mark a whole file is a source of documentation for a specified
+article.</p>
+<p>Example:</p>
+<pre><pre class="playground"><code class="language-rust">/**
+* @FileArticle How it works
+*/
+
+/**
+ * Documentation for `main`
+ */
+fn main() {}
+
+/**
+ * Documentation for `parse_files`
+ */
+fn parse_files() {}
+</code></pre></pre>
+<p>In that case all comments from a file will be parsed in the same way if they were marked with
+<code>@Article How it works</code></p>
+<p>If you want to exclude some comment from parsing you need to use <code>@Ignore</code> attribute in that
+section.</p>
+<p>Example:</p>
+<pre><pre class="playground"><code class="language-rust">/**
+* @FileArticle How it works
+*/
+
+/**
+ * Documentation for `main`
+ */
+fn main() {}
+
+/**
+ * @Ignore
+ * This comment will be ignored.
+ */
+fn parse_files() {}
+</code></pre></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L54-L98">[~]</a></p>
+<p><code>@Ignore</code> is for ignoring a marked documentation section.
+<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L102-L103">[~]</a></p>
+<p><code>@CodeBlockStart</code> and <code>@CodeBlockEnd</code> allow to include code from a current file as an
+example.</p>
+<p>Example:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/**
+* @Article Usage examples
+* Here you can see a function call:
+* @CodeBlockStart rust
+*/
+calc_size(item)
+/**
+* @CodeBlockEnd
+*/
+<span class="boring">}
+</span></code></pre></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L107-L123">[~]</a></p>
 
                     </main>
 
