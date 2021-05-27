@@ -1,6 +1,6 @@
 [package]
 name = "fundoc"
-version = "0.2.7"
+version = "0.3.0"
 authors = ["Sergey Golovin <golovim@gmail.com>"]
 edition = "2018"
 license = "MIT"
