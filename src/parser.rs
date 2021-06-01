@@ -295,6 +295,7 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                 is_article_section = false;
                 is_comment_section = false;
                 current_article = new_article();
+                file_global_topic = String::from("");
             } else if trimmed_line.starts_with(Keywords::CodeBlockStart.as_str()) {
                 code_block = trim_article_line(
                     line.replace(Keywords::CodeBlockStart.as_str(), ""),
@@ -378,6 +379,7 @@ fn get_test_config() -> config::Config {
         mdbook: None,
         book_name: None,
         book_build_dir: None,
+        repositories: None,
     }
 }
 

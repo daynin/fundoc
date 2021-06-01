@@ -32,6 +32,7 @@ pub struct Config {
      * - `files_patterns` - unix style pathname patterns for matching files which will be parsed.
      */
     pub files_patterns: Vec<String>,
+    pub repositories: Option<Vec<String>>,
     /**
      * @Article Configuration
      *
@@ -71,12 +72,11 @@ pub struct Config {
  * which should be placed into the working directory of the programm's proccess (generally, it's a root of a
  * poject)
  */
-const DEFAULT_CONFIG_PATH: &str = "./fundoc.json";
-
-pub fn read_config() -> Option<Config> {
+pub fn read_config(path: Option<&str>) -> Option<Config> {
     let mut config: Option<Config> = None;
+    let config_file = format!("{}/fundoc.json", path.unwrap_or("."));
 
-    match File::open(DEFAULT_CONFIG_PATH) {
+    match File::open(config_file) {
         Ok(mut file) => {
             let mut content = String::new();
             if file.read_to_string(&mut content).is_err() {
@@ -160,6 +160,7 @@ pub fn create_default_config() {
         book_build_dir,
         mdbook: Some(mdbook),
         files_patterns: vec![String::from("**/*.rs")],
+        repositories: None,
         comment_start_string: None,
         comment_end_string: None,
         comment_prefix: None,

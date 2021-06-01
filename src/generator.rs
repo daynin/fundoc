@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::fs;
 use std::fs::File;
 use std::io::prelude::*;
 
@@ -15,11 +14,6 @@ struct Document {
 
 fn to_markdown(document: &Document) -> String {
     format!("# {}\n{}", document.title, document.content)
-}
-
-fn recreate_dir(path: &str) -> Result<(), std::io::Error> {
-    fs::remove_dir_all(path).ok();
-    fs::create_dir_all(path)
 }
 
 fn merge_docs(
@@ -106,10 +100,7 @@ fn write_summary(documents: &HashMap<String, Document>, docs_path: &str, mdbook:
 
 pub fn generate_docs(articles: Vec<parser::Article>, config: config::Config) {
     let docs_path = config.docs_folder.unwrap();
-
     let documentation = merge_docs(articles, config.repository_host);
-
-    recreate_dir(&docs_path).expect("Cannot create the documentation folder");
 
     write_summary(&documentation, &docs_path, config.mdbook.unwrap());
 

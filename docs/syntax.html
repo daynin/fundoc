@@ -136,15 +136,13 @@
                         </a>
                         
                         
-                        
-
                     </div>
                 </div>
 
                 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -165,78 +163,37 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="syntax"><a class="header" href="#syntax">Syntax</a></h1>
+                        <h1><a class="header" href="#syntax" id="syntax">Syntax</a></h1>
 <p><code>@Article &lt;Article name&gt;</code> is for marking documentation sections to tell in which articale this section should
 be merged. You can use <code>markdown</code> syntax in documentation sections.</p>
-<p>Example:</p>
-<pre><pre class="playground"><code class="language-rust">/**
- * @Article How it works
- *
- * # Title of the article
- *
- * Some text
- */
-fn main() {}
-</code></pre></pre>
-<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L50">[~]</a></p>
-<p><code>@FileArtcile</code> allows you to mark a whole file is a source of documentation for a specified
-article.</p>
-<p>Example:</p>
-<pre><pre class="playground"><code class="language-rust">/**
-* @FileArticle How it works
-*/
-
-/**
- * Documentation for `main`
- */
-fn main() {}
-
-/**
- * Documentation for `parse_files`
- */
-fn parse_files() {}
-</code></pre></pre>
-<p>In that case all comments from a file will be parsed in the same way if they were marked with
-<code>@Article How it works</code></p>
-<p>If you want to exclude some comment from parsing you need to use <code>@Ignore</code> attribute in that
-section.</p>
-<p>Example:</p>
-<pre><pre class="playground"><code class="language-rust">/**
-* @FileArticle How it works
-*/
-
-/**
- * Documentation for `main`
- */
-fn main() {}
-
-/**
- * @Ignore
- * This comment will be ignored.
- */
-fn parse_files() {}
-</code></pre></pre>
-<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L54-L98">[~]</a></p>
-<p><code>@Ignore</code> is for ignoring a marked documentation section.
-<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L102-L103">[~]</a></p>
-<p><code>@CodeBlockStart &lt;Programming Language&gt;</code> and <code>@CodeBlockEnd</code> allow to include code from a current file as an
-example.</p>
 <p>Example:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>/**
-* @Article Usage examples
-* Here you can see a function call:
-* @CodeBlockStart rust
-*/
-calc_size(item)
+ * @Article How it works
+ *
+ * # Title of the article
+ *
+ * Some text
+[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L47)
+
+`@FileArtcile` allows you to mark a whole file is a source of documentation for a specified
+article.
+
+Example:
+
+```rust
 /**
-* @CodeBlockEnd
-*/
+* @FileArticle How it works
+[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L54-L62)
+
+`@Ignore` is for ignoring a marked documentation section.
+[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L102-L103)
+
 <span class="boring">}
 </span></code></pre></pre>
-<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L107-L123">[~]</a></p>
+<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L107-L107">[~]</a></p>
 
                     </main>
 
