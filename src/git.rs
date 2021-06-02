@@ -1,6 +1,8 @@
 use std::process::Command;
 use std::fs;
-use url::{Url};
+use std::env;
+use url::{Url, ParseError};
+use ansi_term::Colour;
 
 use crate::config;
 use crate::fs_utils;
@@ -13,8 +15,28 @@ pub struct Project {
 
 const TMP_REPOSITORIES: &str = "./.tmp_repositories";
 
+fn get_repo_url(url: &str) -> Result<Url, ParseError> {
+    Url::parse(url).map(|mut parsed_url| {
+        match env::var("GH_TOKEN") {
+            Ok(gh_token) => {
+                parsed_url.set_username("fundoc").ok();
+                parsed_url.set_password(Some(&gh_token)).ok();
+
+                parsed_url
+            },
+            Err(_) => parsed_url
+        }
+    })
+}
+
 pub fn clone_repositories(config: config::Config) -> Vec<Project> {
     config.repositories.unwrap_or_default().into_iter().map(|url| {
+        println!(
+            "\n{} {}",
+            Colour::Green.bold().paint("Clone"),
+            url
+        );
+
         let path = String::from(Url::parse(&url).unwrap().path());
         let repo_name = &path[path.find('/').unwrap() + 1 .. path.rfind(".git").unwrap()];
 
@@ -24,10 +46,10 @@ pub fn clone_repositories(config: config::Config) -> Vec<Project> {
 
         Command::new("git")
             .arg("clone")
-            .arg(url)
+            .arg(get_repo_url(&url).unwrap().as_str())
             .arg(&tmp_dir)
             .output()
-            .expect("Failed to execute command");
+            .expect("Failed to clone the repo.");
 
         Project {
             path: tmp_dir.clone(),
