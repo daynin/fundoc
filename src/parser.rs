@@ -146,6 +146,8 @@ pub struct Parser {
     comment_symbol: char,
     start_comment: String,
     end_comment: String,
+    code_block: String,
+    file_global_topic: String,
 
     articles: Vec<Article>,
     current_article: Article,
@@ -174,6 +176,8 @@ impl Parser {
             is_article_section: false,
             is_comment_section: false,
             is_nested_comment_section: false,
+            code_block: String::from(""),
+            file_global_topic: String::from(""),
             comment_symbol,
             start_comment,
             end_comment,
@@ -272,7 +276,7 @@ impl Parser {
         }
     }
 
-    fn set_comment_boundaries(&mut self, line: &str, code_block: &str) {
+    fn set_comment_boundaries(&mut self, line: &str) {
         match line.trim() {
             l if l.starts_with(&self.start_comment) => {
                 self.is_comment_section = true;
@@ -284,13 +288,65 @@ impl Parser {
                 self.is_nested_comment_section = false;
             }
             l if l.ends_with(&self.end_comment)
-                && code_block.is_empty()
+                && self.code_block.is_empty()
                 && !self.is_nested_comment_section =>
             {
                 self.is_comment_section = false;
             }
             _ => {}
         };
+    }
+
+    fn complete_article_parsing(&mut self, line_number: i16) {
+        self.is_article_section = false;
+
+        self.current_article.content = self.current_article.content.trim().to_string();
+        self.current_article.end_line = line_number - 1;
+        self.articles.push(self.current_article.clone());
+
+        self.current_article = self.new_article();
+    }
+
+    fn parse_article_content(&mut self, line: &str, line_number: i16) {
+        let trimmed_line = self.trim_article_line(line.to_string());
+
+        if trimmed_line.starts_with(Keyword::FileArticle.as_str()) {
+            self.file_global_topic =
+                self.trim_article_line(line.replace(Keyword::FileArticle.as_str(), ""));
+        } else if !self.file_global_topic.is_empty() && !self.is_article_section {
+            self.current_article.topic = self.file_global_topic.clone();
+            self.current_article.start_line = line_number;
+            self.is_article_section = true;
+        } else if trimmed_line.starts_with(Keyword::Article.as_str()) {
+            let topic = line.replace(Keyword::Article.as_str(), "");
+
+            self.current_article.topic = self.trim_article_line(topic);
+            self.current_article.start_line = line_number;
+            self.is_article_section = true;
+        } else if trimmed_line.starts_with(Keyword::Ignore.as_str()) {
+            self.is_article_section = false;
+            self.is_comment_section = false;
+            self.current_article = self.new_article();
+            self.file_global_topic = String::from("");
+        } else if trimmed_line.starts_with(Keyword::CodeBlockStart.as_str()) {
+            self.code_block =
+                self.trim_article_line(line.replace(Keyword::CodeBlockStart.as_str(), ""));
+            self.current_article.content += format!("```{}", self.code_block).as_str();
+        } else if line.trim().starts_with(
+            format!("{} {}", self.start_comment, Keyword::CodeBlockEnd.as_str()).as_str(),
+        ) {
+            self.code_block = "".to_string();
+            self.current_article.content += "```";
+            self.is_comment_section = false;
+            self.is_article_section = false;
+
+            self.current_article.end_line = line_number - 1;
+            self.articles.push(self.current_article.clone());
+
+            self.current_article = self.new_article();
+        } else if self.is_article_section {
+            self.current_article.content += &format!("{}\n", self.parse_text(line));
+        }
     }
 
     fn parse_file(&mut self, file_content: &str, file_path: &str) -> Vec<Article> {
@@ -301,66 +357,18 @@ impl Parser {
         self.current_article.path = file_path.to_string();
 
         let mut line_number = 1;
-        let mut code_block = String::from("");
-        let mut file_global_topic = String::from("");
 
         self.is_comment_section = false;
         self.is_nested_comment_section = false;
         self.is_article_section = false;
 
         for line in file_content.lines() {
-            self.set_comment_boundaries(line, &code_block);
+            self.set_comment_boundaries(line);
 
             if !self.is_comment_section && self.is_article_section {
-                self.is_article_section = false;
-
-                self.current_article.content = self.current_article.content.trim().to_string();
-                self.current_article.end_line = line_number - 1;
-                self.articles.push(self.current_article.clone());
-
-                self.current_article = self.new_article();
-            }
-
-            if self.is_comment_section {
-                let trimmed_line = self.trim_article_line(line.to_string());
-
-                if trimmed_line.starts_with(Keyword::FileArticle.as_str()) {
-                    file_global_topic =
-                        self.trim_article_line(line.replace(Keyword::FileArticle.as_str(), ""));
-                } else if !file_global_topic.is_empty() && !self.is_article_section {
-                    self.current_article.topic = file_global_topic.clone();
-                    self.current_article.start_line = line_number;
-                    self.is_article_section = true;
-                } else if trimmed_line.starts_with(Keyword::Article.as_str()) {
-                    let topic = line.replace(Keyword::Article.as_str(), "");
-
-                    self.current_article.topic = self.trim_article_line(topic);
-                    self.current_article.start_line = line_number;
-                    self.is_article_section = true;
-                } else if trimmed_line.starts_with(Keyword::Ignore.as_str()) {
-                    self.is_article_section = false;
-                    self.is_comment_section = false;
-                    self.current_article = self.new_article();
-                    file_global_topic = String::from("");
-                } else if trimmed_line.starts_with(Keyword::CodeBlockStart.as_str()) {
-                    code_block =
-                        self.trim_article_line(line.replace(Keyword::CodeBlockStart.as_str(), ""));
-                    self.current_article.content += format!("```{}", code_block).as_str();
-                } else if line.trim().starts_with(
-                    format!("{} {}", self.start_comment, Keyword::CodeBlockEnd.as_str()).as_str(),
-                ) {
-                    code_block = "".to_string();
-                    self.current_article.content += "```";
-                    self.is_comment_section = false;
-                    self.is_article_section = false;
-
-                    self.current_article.end_line = line_number - 1;
-                    self.articles.push(self.current_article.clone());
-
-                    self.current_article = self.new_article();
-                } else if self.is_article_section {
-                    self.current_article.content += &format!("{}\n", self.parse_text(line));
-                }
+                self.complete_article_parsing(line_number);
+            } else if self.is_comment_section {
+                self.parse_article_content(line, line_number);
             }
 
             line_number += 1;
