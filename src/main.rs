@@ -3,8 +3,8 @@ mod cli;
 mod config;
 mod fs_utils;
 mod generator;
-mod parser;
 mod git;
+mod parser;
 use std::fs;
 
 use ansi_term::Colour;
@@ -13,7 +13,7 @@ fn parse_articles(config: config::Config, root: &str) -> Vec<parser::Article> {
     println!("Start documentation parsing...\n");
 
     let files_patterns: Vec<String> = vec![
-        vec![format!("{}/**/*.fdoc.md", root).to_string()],
+        vec![format!("{}/**/*.fdoc.md", root)],
         config.files_patterns.clone(),
     ]
     .concat();
@@ -23,7 +23,7 @@ fn parse_articles(config: config::Config, root: &str) -> Vec<parser::Article> {
         paths.push(format!("{}/{}/{}", root, config.project_path, pattern));
     }
 
-    let result = parser::parse_path(paths, config.clone());
+    let result = parser::parse_path(paths, config);
 
     println!(
         "\n{} {}%",
@@ -47,14 +47,14 @@ fn main() {
         match config::read_config(None) {
             Some(config) => {
                 let mut articles: Vec<parser::Article> = vec![];
-                fs_utils::recreate_dir(&config.clone().docs_folder.unwrap()).expect("Cannot create the documentation folder");
+                fs_utils::recreate_dir(&config.clone().docs_folder.unwrap())
+                    .expect("Cannot create the documentation folder");
                 articles.append(&mut parse_articles(config.clone(), "."));
 
                 for project in git::clone_repositories(config.clone()) {
-                    match project.config {
-                        Some(project_config) => articles.append(&mut parse_articles(project_config, &project.path)),
-                        None => {},
-                    };
+                    if project.config.is_some() {
+                        articles.append(&mut parse_articles(project.config.unwrap(), &project.path))
+                    }
                 }
 
                 generator::generate_docs(articles, config.clone());

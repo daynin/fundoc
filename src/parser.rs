@@ -264,7 +264,10 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
             is_nested_comment_section = true;
         } else if line.trim().ends_with(end_comment) && is_nested_comment_section {
             is_nested_comment_section = false;
-        }else if line.trim().ends_with(end_comment) && code_block.is_empty() && !is_nested_comment_section {
+        } else if line.trim().ends_with(end_comment)
+            && code_block.is_empty()
+            && !is_nested_comment_section
+        {
             is_comment_section = false;
             if is_article_section {
                 is_article_section = false;
@@ -307,7 +310,9 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                     comment_symbol,
                 );
                 current_article.content += format!("```{}", code_block).as_str();
-            } else if line.trim().starts_with(format!("{} {}", start_comment, Keywords::CodeBlockEnd.as_str()).as_str()) {
+            } else if line.trim().starts_with(
+                format!("{} {}", start_comment, Keywords::CodeBlockEnd.as_str()).as_str(),
+            ) {
                 code_block = "".to_string();
                 current_article.content += "```";
                 is_comment_section = false;
