@@ -107,7 +107,7 @@ pub fn read_config(path: Option<&str>) -> Option<Config> {
                 println!("Cannot read config file");
             };
 
-            config = serde_json::from_str(content.as_str()).unwrap();
+            config = serde_json::from_str(&content).unwrap();
         }
         Err(e) => {
             println!("{:?}", e);

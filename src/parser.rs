@@ -155,19 +155,17 @@ fn remove_ignored_text(text: String) -> String {
     let enable_comment = "fundoc-enable";
 
     let disable_regex = Regex::new(
-        format!(
+        &format!(
             "{}{}{}//{}{}|//{}{}",
             multiline_mode, linebreakers, spaces, spaces, disable_comment, spaces, disable_comment
         )
-        .as_str(),
     )
     .unwrap();
     let enable_regex = Regex::new(
-        format!(
+        &format!(
             "{}{}{}//{}{}|//{}{}",
             multiline_mode, linebreakers, spaces, spaces, enable_comment, spaces, enable_comment
         )
-        .as_str(),
     )
     .unwrap();
 
@@ -225,7 +223,7 @@ fn parse_text(line: &str, comment_symbol: char) -> &str {
     let empty_comment_line = format!("{} ", comment_symbol);
     let trimmed_line = line.trim_start();
 
-    if trimmed_line.starts_with(empty_comment_line.as_str()) {
+    if trimmed_line.starts_with(&empty_comment_line) {
         trimmed_line.get(2..)
     } else if trimmed_line.starts_with(' ') || trimmed_line.starts_with(comment_symbol) {
         trimmed_line.get(1..)
@@ -309,7 +307,7 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                     line.replace(Keywords::CodeBlockStart.as_str(), ""),
                     comment_symbol,
                 );
-                current_article.content += format!("```{}", code_block).as_str();
+                current_article.content += &format!("```{}", code_block);
             } else if line.trim().starts_with(
                 format!("{} {}", start_comment, Keywords::CodeBlockEnd.as_str()).as_str(),
             ) {
@@ -353,7 +351,7 @@ pub fn parse_path(directory_paths: Vec<String>, config: config::Config) -> Parsi
                     let prepared_content = remove_ignored_text(content);
                     let file_path = entry_path.to_str().unwrap();
                     let articles =
-                        &mut parse_file(prepared_content.as_str(), file_path, config.clone());
+                        &mut parse_file(&prepared_content, file_path, config.clone());
 
                     files_counter += 1.0;
                     if !articles.is_empty() {

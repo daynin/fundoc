@@ -54,12 +54,10 @@ fn merge_docs(
 }
 
 fn write_doc(document: &Document, docs_path: &str) {
-    let file_name = document.file_name.as_str();
-
-    match File::create(format!("{}/{}", docs_path, file_name)) {
+    match File::create(format!("{}/{}", docs_path, &document.file_name)) {
         Ok(mut file) => match file.write_all(to_markdown(document).as_bytes()) {
-            Ok(_) => println!("\"{}\" is created", file_name),
-            Err(_) => println!("Cannot write a file: {}", file_name),
+            Ok(_) => println!("\"{}\" is created", &document.file_name),
+            Err(_) => println!("Cannot write a file: {}", &document.file_name),
         },
         Err(e) => println!("{:?}", e),
     }
@@ -75,7 +73,7 @@ fn create_summary(documents: &HashMap<String, Document>) -> String {
 
         match document {
             Some(document) => {
-                content += format!("* [{}](./{})\n", document.title, document.file_name).as_str()
+                content += &format!("* [{}](./{})\n", document.title, document.file_name)
             }
             None => println!("Cannot find document"),
         }
