@@ -114,7 +114,7 @@ You can create a config file by executing `fundoc --init` command and answering 
 
 All Fundoc's parameters are described [here](https://csssr.github.io/fundoc/configuration.html)
 
-To generate documenation run `fundoc`:
+To generate documentation run `fundoc`:
 
 <p align="center">
     <img src="./images/fundoc-work.png" />
