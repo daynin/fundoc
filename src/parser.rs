@@ -244,35 +244,40 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
     let mut line_number = 1;
     let mut articles: Vec<Article> = vec![];
     let mut current_article: Article = new_article();
-    let mut is_comment_section = false;
-    let mut is_nested_comment_section = false;
-    let mut is_article_section = false;
     let mut code_block = String::from("");
     let mut file_global_topic = String::from("");
 
+    let mut is_comment_section = false;
+    let mut is_nested_comment_section = false;
+    let mut is_article_section = false;
+
     for line in file_content.lines() {
-        if line.trim().starts_with(start_comment) {
-            is_comment_section = true;
-        } else if line.trim().ends_with(start_comment) && is_comment_section {
-            is_nested_comment_section = true;
-        } else if line.trim().ends_with(end_comment) && is_nested_comment_section {
-            is_nested_comment_section = false;
-        } else if line.trim().ends_with(end_comment)
-            && code_block.is_empty()
-            && !is_nested_comment_section
-        {
-            is_comment_section = false;
-            if is_article_section {
-                is_article_section = false;
-
-                current_article.content = current_article.content.trim().to_string();
-                current_article.path = file_path.to_string();
-                current_article.end_line = line_number - 1;
-                articles.push(current_article);
-
-                current_article = new_article();
+        match line.trim() {
+            l if l.starts_with(start_comment) => is_comment_section = true,
+            l if l.ends_with(start_comment) && is_comment_section => {
+                is_nested_comment_section = true
             }
-        }
+            l if l.ends_with(end_comment) && is_nested_comment_section => {
+                is_nested_comment_section = false
+            }
+            l if l.ends_with(end_comment)
+                && code_block.is_empty()
+                && !is_nested_comment_section =>
+            {
+                is_comment_section = false;
+                if is_article_section {
+                    is_article_section = false;
+
+                    current_article.content = current_article.content.trim().to_string();
+                    current_article.path = file_path.to_string();
+                    current_article.end_line = line_number - 1;
+                    articles.push(current_article);
+
+                    current_article = new_article();
+                }
+            }
+            _ => {}
+        };
 
         if is_comment_section {
             let trimmed_line = trim_article_line(line.to_string(), comment_symbol);
@@ -314,7 +319,6 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                 current_article.path = file_path.to_string();
                 current_article.end_line = line_number - 1;
                 articles.push(current_article);
-
                 current_article = new_article();
             } else if is_article_section {
                 current_article.content +=
