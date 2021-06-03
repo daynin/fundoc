@@ -259,49 +259,35 @@ impl Parser {
         }]
     }
 
-    fn parse_text<'a>(&self, line: &'a str, comment_symbol: char) -> &'a str {
-        let empty_comment_line = format!("{} ", comment_symbol);
+    fn parse_text<'a>(&self, line: &'a str) -> &'a str {
+        let empty_comment_line = format!("{} ", self.comment_symbol);
         let trimmed_line = line.trim_start();
 
         if trimmed_line.starts_with(&empty_comment_line) {
             &trimmed_line[2..]
-        } else if trimmed_line.starts_with(' ') || trimmed_line.starts_with(comment_symbol) {
+        } else if trimmed_line.starts_with(' ') || trimmed_line.starts_with(self.comment_symbol) {
             &trimmed_line[1..]
         } else {
             trimmed_line
         }
     }
 
-    fn set_comments_boundaries(
-        &mut self,
-        line: &str,
-        line_number: i16,
-        file_path: &str,
-        code_block: &str,
-    ) {
+    fn set_comment_boundaries(&mut self, line: &str, code_block: &str) {
         match line.trim() {
-            l if l.starts_with(&self.start_comment) => self.is_comment_section = true,
+            l if l.starts_with(&self.start_comment) => {
+                self.is_comment_section = true;
+            }
             l if l.ends_with(&self.start_comment) && self.is_comment_section => {
                 self.is_nested_comment_section = true;
             }
             l if l.ends_with(&self.end_comment) && self.is_nested_comment_section => {
-                self.is_nested_comment_section = false
+                self.is_nested_comment_section = false;
             }
             l if l.ends_with(&self.end_comment)
                 && code_block.is_empty()
                 && !self.is_nested_comment_section =>
             {
                 self.is_comment_section = false;
-                if self.is_article_section {
-                    self.is_article_section = false;
-
-                    self.current_article.content = self.current_article.content.trim().to_string();
-                    self.current_article.path = file_path.to_string();
-                    self.current_article.end_line = line_number - 1;
-                    self.articles.push(self.current_article.clone());
-
-                    self.current_article = self.new_article();
-                }
             }
             _ => {}
         };
@@ -321,7 +307,18 @@ impl Parser {
         self.is_article_section = false;
 
         for line in file_content.lines() {
-            self.set_comments_boundaries(line, line_number, file_path, &code_block);
+            self.set_comment_boundaries(line, &code_block);
+
+            if !self.is_comment_section && self.is_article_section {
+                self.is_article_section = false;
+
+                self.current_article.content = self.current_article.content.trim().to_string();
+                self.current_article.path = file_path.to_string();
+                self.current_article.end_line = line_number - 1;
+                self.articles.push(self.current_article.clone());
+
+                self.current_article = self.new_article();
+            }
 
             if self.is_comment_section {
                 let trimmed_line = self.trim_article_line(line.to_string());
@@ -362,8 +359,7 @@ impl Parser {
 
                     self.current_article = self.new_article();
                 } else if self.is_article_section {
-                    self.current_article.content +=
-                        format!("{}\n", self.parse_text(line, self.comment_symbol)).as_str();
+                    self.current_article.content += &format!("{}\n", self.parse_text(line));
                 }
             }
 
