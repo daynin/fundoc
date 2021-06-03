@@ -100,11 +100,6 @@ enum Keywords {
     FileArticle,
     /**
      * @Article Syntax
-     * `@Ignore` is for ignoring a marked documentation section.
-     */
-    Ignore,
-    /**
-     * @Article Syntax
      * `@CodeBlockStart <Programming Language>` and `@CodeBlockEnd` allow to include code from a current file as an
      * example.
      *
@@ -124,6 +119,11 @@ enum Keywords {
      */
     CodeBlockStart,
     CodeBlockEnd,
+    /**
+     * @Article Syntax
+     * `@Ignore` is for ignoring a marked documentation section.
+     */
+    Ignore,
 }
 
 impl Keywords {
@@ -252,6 +252,7 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
     let mut articles: Vec<Article> = vec![];
     let mut current_article: Article = new_article();
     let mut is_comment_section = false;
+    let mut is_nested_comment_section = false;
     let mut is_article_section = false;
     let mut code_block = String::from("");
     let mut file_global_topic = String::from("");
@@ -259,7 +260,11 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
     for line in file_content.lines() {
         if line.trim().starts_with(start_comment) {
             is_comment_section = true;
-        } else if line.trim().ends_with(end_comment) && code_block.is_empty() {
+        } else if line.trim().ends_with(start_comment) && is_comment_section {
+            is_nested_comment_section = true;
+        } else if line.trim().ends_with(end_comment) && is_nested_comment_section {
+            is_nested_comment_section = false;
+        }else if line.trim().ends_with(end_comment) && code_block.is_empty() && !is_nested_comment_section {
             is_comment_section = false;
             if is_article_section {
                 is_article_section = false;
@@ -710,6 +715,32 @@ const TIMEOUT = 3000
         path: "".to_string(),
         start_line: 3,
         end_line: 7,
+    }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn parse_nested_commends() {
+    let file_content = "
+/**
+ * @Article Test article
+ * Example:
+ * /**
+ * * @Article Example article
+ * * Example
+ * */
+ * test
+ */
+";
+
+    let articles = parse_file(file_content, "", get_test_config());
+    let expected_result = vec![Article {
+        topic: String::from("Test article"),
+        content: String::from("Example:\n/**\n* @Article Example article\n* Example\n*/\ntest"),
+        path: "".to_string(),
+        start_line: 3,
+        end_line: 9,
     }];
 
     assert_eq!(articles, expected_result);
