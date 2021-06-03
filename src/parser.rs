@@ -272,15 +272,21 @@ impl Parser {
         }
     }
 
-    fn set_comments_boundaries(&mut self, line: &str, line_number: i16, file_path: &str, code_block: &str) {
+    fn set_comments_boundaries(
+        &mut self,
+        line: &str,
+        line_number: i16,
+        file_path: &str,
+        code_block: &str,
+    ) {
         match line.trim() {
             l if l.starts_with(&self.start_comment) => self.is_comment_section = true,
             l if l.ends_with(&self.start_comment) && self.is_comment_section => {
                 self.is_nested_comment_section = true;
-            },
+            }
             l if l.ends_with(&self.end_comment) && self.is_nested_comment_section => {
                 self.is_nested_comment_section = false
-            },
+            }
             l if l.ends_with(&self.end_comment)
                 && code_block.is_empty()
                 && !self.is_nested_comment_section =>
@@ -296,7 +302,7 @@ impl Parser {
 
                     self.current_article = self.new_article();
                 }
-            },
+            }
             _ => {}
         };
     }
@@ -321,9 +327,8 @@ impl Parser {
                 let trimmed_line = self.trim_article_line(line.to_string());
 
                 if trimmed_line.starts_with(Keyword::FileArticle.as_str()) {
-                    file_global_topic = self.trim_article_line(
-                        line.replace(Keyword::FileArticle.as_str(), ""),
-                    );
+                    file_global_topic =
+                        self.trim_article_line(line.replace(Keyword::FileArticle.as_str(), ""));
                 } else if !file_global_topic.is_empty() && !self.is_article_section {
                     self.current_article.topic = file_global_topic.clone();
                     self.current_article.start_line = line_number;
@@ -340,9 +345,8 @@ impl Parser {
                     self.current_article = self.new_article();
                     file_global_topic = String::from("");
                 } else if trimmed_line.starts_with(Keyword::CodeBlockStart.as_str()) {
-                    code_block = self.trim_article_line(
-                        line.replace(Keyword::CodeBlockStart.as_str(), ""),
-                    );
+                    code_block =
+                        self.trim_article_line(line.replace(Keyword::CodeBlockStart.as_str(), ""));
                     self.current_article.content += format!("```{}", code_block).as_str();
                 } else if line.trim().starts_with(
                     format!("{} {}", self.start_comment, Keyword::CodeBlockEnd.as_str()).as_str(),
@@ -408,7 +412,6 @@ impl Parser {
         }
     }
 }
-
 
 // fundoc-disable
 #[cfg(test)]
