@@ -307,7 +307,7 @@ fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Ve
                     comment_symbol,
                 );
                 current_article.content += format!("```{}", code_block).as_str();
-            } else if trimmed_line.contains(Keywords::CodeBlockEnd.as_str()) {
+            } else if line.trim().starts_with(format!("{} {}", start_comment, Keywords::CodeBlockEnd.as_str()).as_str()) {
                 code_block = "".to_string();
                 current_article.content += "```";
                 is_comment_section = false;
@@ -712,6 +712,30 @@ const TIMEOUT = 3000
     let expected_result = vec![Article {
         topic: String::from("Test article"),
         content: String::from("Request timeout:\n```js/\nconst TIMEOUT = 3000\n```"),
+        path: "".to_string(),
+        start_line: 3,
+        end_line: 7,
+    }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn parse_code_block_attribute_from_ending_comment_only() {
+    let file_content = "
+/**
+ * @Article Test article
+ * Should ignore @CodeBlockEnd in a text block
+ * @CodeBlockStart rust
+ */
+...
+/** @CodeBlockEnd */
+";
+
+    let articles = parse_file(file_content, "", get_test_config());
+    let expected_result = vec![Article {
+        topic: String::from("Test article"),
+        content: String::from("Should ignore @CodeBlockEnd in a text block\n```rust/\n...\n```"),
         path: "".to_string(),
         start_line: 3,
         end_line: 7,

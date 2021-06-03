@@ -215,11 +215,26 @@ fn main() {}
 fn parse_files() {}
 </code></pre></pre>
 <p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L54-L98">[~]</a></p>
-<pre><code>[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L102-L102)
-
-`@Ignore` is for ignoring a marked documentation section.
-[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L123-L124)
-</code></pre>
+<p><code>@CodeBlockStart &lt;Programming Language&gt;</code> and <code>@CodeBlockEnd</code> allow to include code from a current file as an
+example.</p>
+<p>Example:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/**
+* @Article Usage examples
+* Here you can see a function call:
+* @CodeBlockStart rust
+*/
+calc_size(item)
+/**
+* @CodeBlockEnd
+*/
+<span class="boring">}
+</span></code></pre></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L102-L118">[~]</a></p>
+<p><code>@Ignore</code> is for ignoring a marked documentation section.
+<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L123-L124">[~]</a></p>
 
                     </main>
 

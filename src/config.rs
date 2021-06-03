@@ -32,6 +32,30 @@ pub struct Config {
      * - `files_patterns` - unix style pathname patterns for matching files which will be parsed.
      */
     pub files_patterns: Vec<String>,
+    /**
+     * @Article Configuration
+     * - `repositories` - you can specify a repository list by setting to parse and generate documentation from all
+     * repositories from the list. It can be useful if you have many repositories.
+     *
+     * For example a microservices architecture:
+     * ```
+     *
+     *                        +-------------------+
+     *                        |                   |
+     *           +------------+   Documentation   +------------+
+     *           |            |        repo       |            |
+     *           |            +---------+---------+            |
+     *           |                      |                      |
+     *           |                      |                      |
+     *           |                      |                      |
+     *           |                      |                      |
+     * +-------------------+  +---------|---------+  +---------|---------+
+     * |                   |  |                   |  |                   |
+     * |   Microservice 1  |  |   Microservice 2  |  |   Microservice 3  |
+     * |       repo        |  |        repo       |  |        repo       |
+     * +-------------------+  +-------------------+  +-------------------+
+     * ```
+     */
     pub repositories: Option<Vec<String>>,
     /**
      * @Article Configuration

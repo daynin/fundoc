@@ -185,12 +185,36 @@
 <a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L30-L32">[~]</a></p>
 </li>
 <li>
+<p><code>repositories</code> - you can specify a repository list by setting to parse and generate documentation from all
+repositories from the list. It can be useful if you have many repositories.</p>
+</li>
+</ul>
+<p>For example a microservices architecture:</p>
+<pre><code>
+                       +-------------------+
+                       |                   |
+          +------------+   Documentation   +------------+
+          |            |        repo       |            |
+          |            +---------+---------+            |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
++-------------------+  +---------|---------+  +---------|---------+
+|                   |  |                   |  |                   |
+|   Microservice 1  |  |   Microservice 2  |  |   Microservice 3  |
+|       repo        |  |        repo       |  |        repo       |
++-------------------+  +-------------------+  +-------------------+
+</code></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L36-L57">[~]</a></p>
+<ul>
+<li>
 <p><code>repository_host</code> - an http url which will be used for creating a link to a file in a
 repository. For example, if you want to add links to your files for each section you can pass
 a value like <code>https://github.com/user_name/project_name/blob/master</code>. It will be used for
 creating an url like this
 <code>https://github.com/user_name/project_name/blob/master/path/to/your/file.txt</code>.
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L37-L43">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L61-L67">[~]</a></p>
 </li>
 <li>
 <p><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</p>
@@ -200,17 +224,17 @@ creating an url like this
 </li>
 <li>
 <p><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L47-L51">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L71-L75">[~]</a></p>
 </li>
 </ul>
 <p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
 <code>book_name</code> - a name of the result book.
 <code>book_build_dir</code> - a directory that contains the build result.
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L57-L61">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L81-L85">[~]</a></p>
 <p>Fundoc will read all the configuration parameters from the <code>fundoc.json</code> config file
 which should be placed into the working directory of the programm's proccess (generally, it's a root of a
 poject)
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L69-L73">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L93-L97">[~]</a></p>
 <p>You can diable parsing for a part of your file or a whole file by adding this comment: <code>fundoc-disable</code>.
 If you wan't to turn fundoc on few lines below just add this comment: <code>fundoc-enable</code>.</p>
 <p>In case when you don't write the enable-comment all text from disable comment until the end of
@@ -268,11 +292,26 @@ fn main() {}
 fn parse_files() {}
 </code></pre></pre>
 <p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L54-L98">[~]</a></p>
-<pre><code>[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L102-L102)
-
-`@Ignore` is for ignoring a marked documentation section.
-[[~]](https://github.com/daynin/fundoc/blob/master/src/parser.rs#L123-L124)
-</code></pre>
+<p><code>@CodeBlockStart &lt;Programming Language&gt;</code> and <code>@CodeBlockEnd</code> allow to include code from a current file as an
+example.</p>
+<p>Example:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/**
+* @Article Usage examples
+* Here you can see a function call:
+* @CodeBlockStart rust
+*/
+calc_size(item)
+/**
+* @CodeBlockEnd
+*/
+<span class="boring">}
+</span></code></pre></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L102-L118">[~]</a></p>
+<p><code>@Ignore</code> is for ignoring a marked documentation section.
+<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L123-L124">[~]</a></p>
 
                     </main>
 
