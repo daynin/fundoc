@@ -136,6 +136,7 @@ You can use [Fundoc's GitHub Action](https://github.com/CSSSR/fundoc-action) to 
 - [x] Different file types support.
 - [x] Creating links to the source files from the documentation.
 - [x] Generating mdBook with an ability to search through documentation.
-- [ ] Multi-repositories support (collecting all documentation fragments from different repos).
+- [x] Multi-repositories support (collecting all documentation fragments from different repos).
+- [ ] Add Graphviz support
 - [ ] Zettelkasten method support (maybe)
 
