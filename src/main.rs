@@ -10,6 +10,7 @@ use std::fs;
 use ansi_term::Colour;
 
 fn parse_articles(config: config::Config, root: &str) -> Vec<parser::Article> {
+    let mut parser = parser::Parser::new(config.clone());
     println!("Start documentation parsing...\n");
 
     let files_patterns: Vec<String> = vec![
@@ -23,7 +24,7 @@ fn parse_articles(config: config::Config, root: &str) -> Vec<parser::Article> {
         paths.push(format!("{}/{}/{}", root, config.project_path, pattern));
     }
 
-    let result = parser::parse_path(paths, config);
+    let result = parser.parse_path(paths);
 
     println!(
         "\n{} {}%",
