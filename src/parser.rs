@@ -298,6 +298,8 @@ impl Parser {
             return self.parse_fdoc_file(file_content, file_path);
         }
 
+        self.current_article.path = file_path.to_string();
+
         let mut line_number = 1;
         let mut code_block = String::from("");
         let mut file_global_topic = String::from("");
@@ -313,7 +315,6 @@ impl Parser {
                 self.is_article_section = false;
 
                 self.current_article.content = self.current_article.content.trim().to_string();
-                self.current_article.path = file_path.to_string();
                 self.current_article.end_line = line_number - 1;
                 self.articles.push(self.current_article.clone());
 
@@ -353,7 +354,6 @@ impl Parser {
                     self.is_comment_section = false;
                     self.is_article_section = false;
 
-                    self.current_article.path = file_path.to_string();
                     self.current_article.end_line = line_number - 1;
                     self.articles.push(self.current_article.clone());
 
