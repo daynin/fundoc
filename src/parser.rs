@@ -154,19 +154,15 @@ fn remove_ignored_text(text: String) -> String {
     let disable_comment = "fundoc-disable";
     let enable_comment = "fundoc-enable";
 
-    let disable_regex = Regex::new(
-        &format!(
-            "{}{}{}//{}{}|//{}{}",
-            multiline_mode, linebreakers, spaces, spaces, disable_comment, spaces, disable_comment
-        )
-    )
+    let disable_regex = Regex::new(&format!(
+        "{}{}{}//{}{}|//{}{}",
+        multiline_mode, linebreakers, spaces, spaces, disable_comment, spaces, disable_comment
+    ))
     .unwrap();
-    let enable_regex = Regex::new(
-        &format!(
-            "{}{}{}//{}{}|//{}{}",
-            multiline_mode, linebreakers, spaces, spaces, enable_comment, spaces, enable_comment
-        )
-    )
+    let enable_regex = Regex::new(&format!(
+        "{}{}{}//{}{}|//{}{}",
+        multiline_mode, linebreakers, spaces, spaces, enable_comment, spaces, enable_comment
+    ))
     .unwrap();
 
     let start_idx = match disable_regex.find_iter(&text).next() {
@@ -208,7 +204,7 @@ fn new_article() -> Article {
 fn parse_fdoc_file(file_content: &str, file_path: &str) -> Vec<Article> {
     let file_name = file_path.split('/').last().unwrap();
     let name_chunks: Vec<&str> = file_name.rsplit('.').collect();
-    let topic = name_chunks.get(2..).unwrap().join(".");
+    let topic = name_chunks[2..].join(".");
 
     vec![Article {
         topic,
@@ -224,13 +220,12 @@ fn parse_text(line: &str, comment_symbol: char) -> &str {
     let trimmed_line = line.trim_start();
 
     if trimmed_line.starts_with(&empty_comment_line) {
-        trimmed_line.get(2..)
+        &trimmed_line[2..]
     } else if trimmed_line.starts_with(' ') || trimmed_line.starts_with(comment_symbol) {
-        trimmed_line.get(1..)
+        &trimmed_line[1..]
     } else {
-        Some(trimmed_line)
+        trimmed_line
     }
-    .unwrap_or("")
 }
 
 fn parse_file(file_content: &str, file_path: &str, config: config::Config) -> Vec<Article> {
@@ -350,8 +345,7 @@ pub fn parse_path(directory_paths: Vec<String>, config: config::Config) -> Parsi
 
                     let prepared_content = remove_ignored_text(content);
                     let file_path = entry_path.to_str().unwrap();
-                    let articles =
-                        &mut parse_file(&prepared_content, file_path, config.clone());
+                    let articles = &mut parse_file(&prepared_content, file_path, config.clone());
 
                     files_counter += 1.0;
                     if !articles.is_empty() {
