@@ -96,6 +96,13 @@ Fundoc supports [mdBook](https://github.com/rust-lang/mdBook), so if you want to
     <img src="./images/full-text-search.gif" />
 </p>
 
+### Companies/projects who use Fundoc
+
+- [CSSSR](https://csssr.com/en)
+- [Zaya Tracker](https://github.com/Zaya-Tracker)
+
+Know of others? Create a PR to let me know!
+
 ### GitHub Action
 
 You can use [Fundoc's GitHub Action](https://github.com/CSSSR/fundoc-action) to automate documentation generation.
