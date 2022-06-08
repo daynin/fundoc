@@ -93,8 +93,8 @@ pub struct Config {
  * @Article Configuration
  *
  * Fundoc will read all the configuration parameters from the `fundoc.json` config file
- * which should be placed into the working directory of the programm's proccess (generally, it's a root of a
- * poject)
+ * which should be placed into the working directory of the programmes process (generally, it's a root of a
+ * project)
  */
 pub fn read_config(path: Option<&str>) -> Option<Config> {
     let mut config: Option<Config> = None;
