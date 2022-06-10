@@ -141,6 +141,7 @@ impl Keyword {
 pub struct Parser {
     is_article_section: bool,
     is_comment_section: bool,
+    is_code_block_section: bool,
     is_nested_comment_section: bool,
 
     comment_symbol: char,
@@ -176,6 +177,7 @@ impl Parser {
             is_article_section: false,
             is_comment_section: false,
             is_nested_comment_section: false,
+            is_code_block_section: false,
             code_block: String::from(""),
             file_global_topic: String::from(""),
             comment_symbol,
@@ -331,14 +333,18 @@ impl Parser {
         } else if trimmed_line.starts_with(Keyword::CodeBlockStart.as_str()) {
             self.code_block =
                 self.trim_article_line(line.replace(Keyword::CodeBlockStart.as_str(), ""));
+
             self.current_article.content += format!("```{}", self.code_block).as_str();
-        } else if line.trim().starts_with(
-            format!("{} {}", self.start_comment, Keyword::CodeBlockEnd.as_str()).as_str(),
-        ) {
+            self.is_code_block_section = true;
+        } else if self.is_code_block_section
+            && (trimmed_line.starts_with(self.start_comment.as_str())
+                || trimmed_line.starts_with(Keyword::CodeBlockEnd.as_str()))
+        {
             self.code_block = "".to_string();
             self.current_article.content += "```";
             self.is_comment_section = false;
             self.is_article_section = false;
+            self.is_code_block_section = false;
 
             self.current_article.end_line = line_number - 1;
             self.articles.push(self.current_article.clone());
@@ -766,6 +772,33 @@ fn add_real_code_from_parsed_files() {
  */
 const TIMEOUT = 3000
 /** @CodeBlockEnd */
+";
+
+    let articles = parser.parse_file(file_content, "");
+    let expected_result = vec![Article {
+        topic: String::from("Test article"),
+        content: String::from("Request timeout:\n```js/\nconst TIMEOUT = 3000\n```"),
+        path: "".to_string(),
+        start_line: 3,
+        end_line: 7,
+    }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn add_real_code_from_parsed_files_with_multiline_code_end_section() {
+    let mut parser = Parser::new(get_test_config());
+    let file_content = "
+/**
+ * @Article Test article
+ * Request timeout:
+ * @CodeBlockStart js
+ */
+const TIMEOUT = 3000
+/**
+ * @CodeBlockEnd
+ */
 ";
 
     let articles = parser.parse_file(file_content, "");
