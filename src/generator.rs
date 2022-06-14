@@ -22,6 +22,9 @@ fn merge_docs(
 ) -> HashMap<String, Document> {
     let mut documentation: HashMap<String, Document> = HashMap::new();
     let repository_host = &repository_host;
+    let mut articles = articles;
+
+    articles.sort_by_key(|a| a.order);
 
     for article in articles {
         let file_name = article.topic.to_lowercase();

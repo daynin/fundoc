@@ -7,6 +7,7 @@ use crate::config;
 
 #[derive(Debug, Clone)]
 pub struct Article {
+    pub order: i16,
     pub topic: String,
     pub content: String,
     pub path: String,
@@ -124,6 +125,27 @@ enum Keyword {
      * `@Ignore` is for ignoring a marked documentation section.
      */
     Ignore,
+    /**
+     * @Article Syntax
+     * `@Order <Order of the Article>` is for controlling the order of the article sections.
+     *
+     * Example:
+     *
+     * ```rust
+     * /**
+     *  * @Article Usage example
+     *  * @Order 2
+     *  * ## Header2
+     *  */
+     *
+     *   /**
+     *  * @Article Usage example
+     *  * @Order 1
+     *  * # Header1
+     *  */
+     * ```
+     */
+    Order,
 }
 
 impl Keyword {
@@ -131,6 +153,7 @@ impl Keyword {
         match *self {
             Keyword::Article => "@Article",
             Keyword::FileArticle => "@FileArticle",
+            Keyword::Order => "@Order",
             Keyword::Ignore => "@Ignore",
             Keyword::CodeBlockStart => "@CodeBlockStart",
             Keyword::CodeBlockEnd => "@CodeBlockEnd",
@@ -166,6 +189,7 @@ impl Parser {
 
         let articles: Vec<Article> = vec![];
         let current_article = Article {
+            order: 1,
             topic: String::from(""),
             content: String::from(""),
             path: String::from(""),
@@ -243,6 +267,7 @@ impl Parser {
 
     fn new_article(&self) -> Article {
         Article {
+            order: 1,
             topic: String::from(""),
             content: String::from(""),
             path: String::from(""),
@@ -257,6 +282,7 @@ impl Parser {
         let topic = name_chunks[2..].join(".");
 
         vec![Article {
+            order: 1,
             topic,
             content: String::from(file_content),
             path: String::from(file_path),
@@ -325,6 +351,15 @@ impl Parser {
             self.current_article.topic = self.trim_article_line(topic);
             self.current_article.start_line = line_number;
             self.is_article_section = true;
+        } else if trimmed_line.starts_with(Keyword::Order.as_str()) {
+            let parsed_order = trimmed_line
+                .replace(Keyword::Order.as_str(), "")
+                .trim()
+                .parse()
+                .unwrap_or(1);
+
+            self.current_article.order = parsed_order;
+            self.current_article.start_line = line_number;
         } else if trimmed_line.starts_with(Keyword::Ignore.as_str()) {
             self.is_article_section = false;
             self.is_comment_section = false;
@@ -454,6 +489,7 @@ pub fn test () {}
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("some text"),
         path: "".to_string(),
@@ -499,6 +535,7 @@ pub fn test () {}
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("some multiline\nawesome text"),
         path: "".to_string(),
@@ -545,6 +582,7 @@ pub fn test () {}
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("```rust\nfn main() {\n    println!(\"Hello world!\");\n}\n```\n\n```rust\nfn test() {\n    println!(\"Hello world!\");\n}\n```"),
         path: "".to_string(),
@@ -579,6 +617,7 @@ fn parse_documentation_with_identation_before_comments() {
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("#### [no-implicit-coercion](https://eslint.org/docs/rules/no-implicit-coercion)\nAll implicit coercions except `!!` are disallowed:\n```js\n// Fail\n+foo\n1 * foo\n\'\' + foo\n`${foo}`\n~foo.indexOf(bar)\n\n// Pass\n!!foo\n```"),
         path: "".to_string(),
@@ -609,6 +648,7 @@ pub fn test () {}
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("List:\n* Item 1\n* Item 2\n\n  Item 2 subtext\n* Item 3"),
         path: "".to_string(),
@@ -633,6 +673,7 @@ use std::io::prelude::*;
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from(""),
         path: "".to_string(),
@@ -655,6 +696,7 @@ test
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("test"),
         path: "".to_string(),
@@ -679,12 +721,70 @@ const b = 2
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("test"),
         path: "".to_string(),
         start_line: 3,
         end_line: 4,
     }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn parse_with_ordering() {
+    let mut parser = Parser::new(get_test_config());
+    let file_content = "
+/**
+ * @Article Test article
+ * @Order 2
+ * test2
+ * */
+const a = 1
+const b = 2
+
+/**
+ * @Article Test article
+ * @Order 1
+ * test1
+ * */
+const c = 3
+
+/**
+ * @Article Test article
+ * test3
+ * */
+const c = 3
+";
+
+    let articles = parser.parse_file(file_content, "");
+    let expected_result = vec![
+        Article {
+            order: 2,
+            topic: String::from("Test article"),
+            content: String::from("test2"),
+            path: "".to_string(),
+            start_line: 4,
+            end_line: 5,
+        },
+        Article {
+            order: 1,
+            topic: String::from("Test article"),
+            content: String::from("test1"),
+            path: "".to_string(),
+            start_line: 12,
+            end_line: 13,
+        },
+        Article {
+            order: 1,
+            topic: String::from("Test article"),
+            content: String::from("test3"),
+            path: "".to_string(),
+            start_line: 18,
+            end_line: 19,
+        },
+    ];
 
     assert_eq!(articles, expected_result);
 }
@@ -711,6 +811,7 @@ fn use_global_article_attribute() {
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![
         Article {
+            order: 1,
             topic: String::from("Test article"),
             content: String::from("test"),
             path: "".to_string(),
@@ -718,6 +819,7 @@ fn use_global_article_attribute() {
             end_line: 7,
         },
         Article {
+            order: 1,
             topic: String::from("Test article"),
             content: String::from("test"),
             path: "".to_string(),
@@ -751,6 +853,7 @@ fn ignore_sections_in_case_of_global_article() {
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("test"),
         path: "".to_string(),
@@ -776,6 +879,7 @@ const TIMEOUT = 3000
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("Request timeout:\n```js/\nconst TIMEOUT = 3000\n```"),
         path: "".to_string(),
@@ -803,6 +907,7 @@ const TIMEOUT = 3000
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("Request timeout:\n```js/\nconst TIMEOUT = 3000\n```"),
         path: "".to_string(),
@@ -828,6 +933,7 @@ fn parse_code_block_attribute_from_ending_comment_only() {
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("Should ignore @CodeBlockEnd in a text block\n```rust/\n...\n```"),
         path: "".to_string(),
@@ -855,6 +961,7 @@ fn parse_nested_commends() {
 
     let articles = parser.parse_file(file_content, "");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("Test article"),
         content: String::from("Example:\n/**\n* @Article Example article\n* Example\n*/\ntest"),
         path: "".to_string(),
@@ -893,6 +1000,7 @@ fn parse_fdoc_file_check() {
     let parser = Parser::new(get_test_config());
     let result = parser.parse_fdoc_file("test", "/some/long/path/to/file.fdoc.md");
     let expected_result = vec![Article {
+        order: 1,
         topic: String::from("file"),
         content: String::from("test"),
         path: "/some/long/path/to/file.fdoc.md".to_string(),
