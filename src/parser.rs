@@ -33,7 +33,7 @@ enum Keyword {
     /**
      * @Article Syntax
      *
-     * `@Article <Article name>` is for marking documentation sections to tell in which articale this section should
+     * `@Article <Article name>` is for marking documentation sections to tell in which article this section should
      * be merged. You can use `markdown` syntax in documentation sections.
      *
      * Example:
@@ -52,7 +52,7 @@ enum Keyword {
     Article,
     /**
     * @Article Syntax
-    * `@FileArtcile` allows you to mark a whole file is a source of documentation for a specified
+    * `@FileArticle` allows you to mark a whole file is a source of documentation for a specified
     * article.
     *
     * Example:
@@ -191,7 +191,7 @@ impl Parser {
     /**
      * @Article Configuration
      *
-     * You can diable parsing for a part of your file or a whole file by adding this comment: `fundoc-disable`.
+     * You can disable parsing for a part of your file or a whole file by adding this comment: `fundoc-disable`.
      * If you wan't to turn fundoc on few lines below just add this comment: `fundoc-enable`.
      *
      * In case when you don't write the enable-comment all text from disable comment until the end of
@@ -556,7 +556,7 @@ pub fn test () {}
 }
 
 #[test]
-fn parse_documentation_with_identation_before_comments() {
+fn parse_documentation_with_indentation_before_comments() {
     let mut parser = Parser::new(get_test_config());
     let file_content = "
      /**
