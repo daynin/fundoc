@@ -42,7 +42,7 @@ fn generate_book(config: config::Config) {
 }
 
 fn main() {
-    if cli::create_cli().is_present("init") {
+    if cli::create_cli().contains_id("init") {
         config::create_default_config()
     } else {
         match config::read_config(None) {

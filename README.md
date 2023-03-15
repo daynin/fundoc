@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/CSSSR/fundoc">
+  <a href="https://github.com/daynin/fundoc">
     <img src="./images/logo.png" height="200px"/>
   </a>
 </p>
@@ -9,14 +9,14 @@
 </h2>
 
 <p align="center">
-  <a href="https://travis-ci.org/CSSSR/fundoc">
-    <img alt="Tests Status" src="https://github.com/CSSSR/fundoc/workflows/tests/badge.svg">
+  <a href="https://travis-ci.org/daynin/fundoc">
+    <img alt="Tests Status" src="https://github.com/daynin/fundoc/workflows/tests/badge.svg">
   </a>
-  <a href="https://github.com/CSSSR/fundoc/blob/master/LICENSE">
+  <a href="https://github.com/daynin/fundoc/blob/master/LICENSE">
     <img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg">
   </a>
-  <a href="https://github.com/CSSSR/fundoc/issues">
-    <img alt="GitHub Issues" src="https://img.shields.io/github/issues/CSSSR/fundoc.svg">
+  <a href="https://github.com/daynin/fundoc/issues">
+    <img alt="GitHub Issues" src="https://img.shields.io/github/issues/daynin/fundoc.svg">
   </a>
   <a href="https://crates.io/crates/fundoc">
     <img alt="Crates.io" src="https://img.shields.io/crates/v/fundoc.svg">
@@ -63,7 +63,7 @@ You can install Fundoc by executing this shell script:
 
 ```bash
 curl -LSfs https://japaric.github.io/trust/install.sh | \
-    sh -s -- --git CSSSR/fundoc
+    sh -s -- --git daynin/fundoc
 ```
 
 If you're rust developer and you have had rust compiler installed, you can install Fundoc from [crates.io](https://crates.io/):
@@ -72,7 +72,7 @@ If you're rust developer and you have had rust compiler installed, you can insta
 cargo install fundoc
 ```
 
-Or manually download it from the [releases page](https://github.com/CSSSR/fundoc/releases).
+Or manually download it from the [releases page](https://github.com/daynin/fundoc/releases).
 
 ### How to use
 
@@ -98,6 +98,7 @@ Fundoc supports [mdBook](https://github.com/rust-lang/mdBook), so if you want to
 
 ### Companies/projects who use Fundoc
 
+- [Space Twistie](https://github.com/Space-Twistie)
 - [CSSSR](https://csssr.com/en)
 - [Zaya Tracker](https://github.com/Zaya-Tracker)
 
@@ -105,7 +106,7 @@ Know of others? Create a PR to let me know!
 
 ### GitHub Action
 
-You can use [Fundoc's GitHub Action](https://github.com/CSSSR/fundoc-action) to automate documentation generation.
+You can use [Fundoc's GitHub Action](https://github.com/daynin/fundoc-action) to automate documentation generation.
 
 ### Roadmap
 

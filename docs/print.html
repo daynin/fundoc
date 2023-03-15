@@ -4,39 +4,25 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Fundoc</title>
-        
         <meta name="robots" content="noindex" />
-        
-        
 
 
         <!-- Custom HTML head -->
         
-
-
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        
         <link rel="icon" href="favicon.svg">
-        
-        
         <link rel="shortcut icon" href="favicon.png">
-        
         <link rel="stylesheet" href="css/variables.css">
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
-        
         <link rel="stylesheet" href="css/print.css" media="print">
-        
 
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        
         <link rel="stylesheet" href="fonts/fonts.css">
-        
 
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
@@ -44,19 +30,18 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        
 
-        
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -72,7 +57,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -84,12 +69,14 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
-            var sidebar = 'hidden';
+            var sidebar = null;
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
@@ -105,8 +92,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -116,34 +102,27 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        
                         <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
-                        
                     </div>
 
                     <h1 class="menu-title">Fundoc</h1>
 
                     <div class="right-buttons">
-                        
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        
-                        
-                        
 
                     </div>
                 </div>
 
-                
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
                         <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
@@ -154,10 +133,9 @@
                         </ul>
                     </div>
                 </div>
-                
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -175,16 +153,16 @@
 </ul>
 <blockquote>
 <p><strong>NOTE</strong> be careful, all files in the <code>docs_folder</code> will be replaced by documentation files.
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L16-L20">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L16-L20">[~]</a></p>
 </blockquote>
 <ul>
 <li>
 <p><code>project_path</code> - an entry point for the parser
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L24-L26">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L24-L26">[~]</a></p>
 </li>
 <li>
 <p><code>files_patterns</code> - unix style pathname patterns for matching files which will be parsed.
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L30-L32">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L30-L32">[~]</a></p>
 </li>
 <li>
 <p><code>repositories</code> - you can specify a repository list by setting to parse and generate documentation from all
@@ -208,7 +186,7 @@ repositories from the list. It can be useful if you have many repositories.</p>
 |       repo        |  |        repo       |  |        repo       |
 +-------------------+  +-------------------+  +-------------------+
 </code></pre>
-<p><a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L36-L57">[~]</a></p>
+<p><a href="https://github.com/daynin/fundoc/blob/master/#L36-L57">[~]</a></p>
 <ul>
 <li>
 <p><code>repository_host</code> - an http url which will be used for creating a link to a file in a
@@ -216,7 +194,7 @@ repository. For example, if you want to add links to your files for each section
 a value like <code>https://github.com/user_name/project_name/blob/master</code>. It will be used for
 creating an url like this
 <code>https://github.com/user_name/project_name/blob/master/path/to/your/file.txt</code>.
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L61-L67">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L61-L67">[~]</a></p>
 </li>
 <li>
 <p><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</p>
@@ -226,24 +204,369 @@ creating an url like this
 </li>
 <li>
 <p><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L71-L75">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L71-L75">[~]</a></p>
 </li>
 </ul>
 <p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
 <code>book_name</code> - a name of the result book.
 <code>book_build_dir</code> - a directory that contains the build result.
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L81-L85">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L81-L85">[~]</a></p>
 <p>Fundoc will read all the configuration parameters from the <code>fundoc.json</code> config file
-which should be placed into the working directory of the programm's proccess (generally, it's a root of a
-poject)
-<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L93-L97">[~]</a></p>
-<p>You can diable parsing for a part of your file or a whole file by adding this comment: <code>fundoc-disable</code>.
+which should be placed into the working directory of the programm's process (generally, it's a root of a
+project)
+<a href="https://github.com/daynin/fundoc/blob/master/#L93-L97">[~]</a></p>
+<p>Configuration parameters:
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L9-L11">[~]</a></p>
+<ul>
+<li><code>docs_folder</code> - a path to a folder which will contain all generated documents.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong> be careful, all files in the <code>docs_folder</code> will be replaced by documentation files.
+<a href="https://github.com/daynin/fundoc/blob/master/#L16-L20">[~]</a></p>
+</blockquote>
+<ul>
+<li>
+<p><code>project_path</code> - an entry point for the parser
+<a href="https://github.com/daynin/fundoc/blob/master/#L24-L26">[~]</a></p>
+</li>
+<li>
+<p><code>files_patterns</code> - unix style pathname patterns for matching files which will be parsed.
+<a href="https://github.com/daynin/fundoc/blob/master/#L30-L32">[~]</a></p>
+</li>
+<li>
+<p><code>repositories</code> - you can specify a repository list by setting to parse and generate documentation from all
+repositories from the list. It can be useful if you have many repositories.</p>
+</li>
+</ul>
+<p>For example a microservices architecture:</p>
+<pre><code>
+                       +-------------------+
+                       |                   |
+          +------------+   Documentation   +------------+
+          |            |        repo       |            |
+          |            +---------+---------+            |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
++-------------------+  +---------|---------+  +---------|---------+
+|                   |  |                   |  |                   |
+|   Microservice 1  |  |   Microservice 2  |  |   Microservice 3  |
+|       repo        |  |        repo       |  |        repo       |
++-------------------+  +-------------------+  +-------------------+
+</code></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/#L36-L57">[~]</a></p>
+<ul>
+<li>
+<p><code>repository_host</code> - an http url which will be used for creating a link to a file in a
+repository. For example, if you want to add links to your files for each section you can pass
+a value like <code>https://github.com/user_name/project_name/blob/master</code>. It will be used for
+creating an url like this
+<code>https://github.com/user_name/project_name/blob/master/path/to/your/file.txt</code>.
+<a href="https://github.com/daynin/fundoc/blob/master/#L61-L67">[~]</a></p>
+</li>
+<li>
+<p><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</p>
+</li>
+<li>
+<p><code>comment_prefix</code> - a comment line prefix. Example: *</p>
+</li>
+<li>
+<p><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
+<a href="https://github.com/daynin/fundoc/blob/master/#L71-L75">[~]</a></p>
+</li>
+</ul>
+<p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
+<code>book_name</code> - a name of the result book.
+<code>book_build_dir</code> - a directory that contains the build result.
+<a href="https://github.com/daynin/fundoc/blob/master/#L81-L85">[~]</a></p>
+<p>Fundoc will read all the configuration parameters from the <code>fundoc.json</code> config file
+which should be placed into the working directory of the programm's process (generally, it's a root of a
+project)
+<a href="https://github.com/daynin/fundoc/blob/master/#L93-L97">[~]</a></p>
+<p>Configuration parameters:
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L9-L11">[~]</a></p>
+<ul>
+<li><code>docs_folder</code> - a path to a folder which will contain all generated documents.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong> be careful, all files in the <code>docs_folder</code> will be replaced by documentation files.
+<a href="https://github.com/daynin/fundoc/blob/master/#L16-L20">[~]</a></p>
+</blockquote>
+<ul>
+<li>
+<p><code>project_path</code> - an entry point for the parser
+<a href="https://github.com/daynin/fundoc/blob/master/#L24-L26">[~]</a></p>
+</li>
+<li>
+<p><code>files_patterns</code> - unix style pathname patterns for matching files which will be parsed.
+<a href="https://github.com/daynin/fundoc/blob/master/#L30-L32">[~]</a></p>
+</li>
+<li>
+<p><code>repositories</code> - you can specify a repository list by setting to parse and generate documentation from all
+repositories from the list. It can be useful if you have many repositories.</p>
+</li>
+</ul>
+<p>For example a microservices architecture:</p>
+<pre><code>
+                       +-------------------+
+                       |                   |
+          +------------+   Documentation   +------------+
+          |            |        repo       |            |
+          |            +---------+---------+            |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
++-------------------+  +---------|---------+  +---------|---------+
+|                   |  |                   |  |                   |
+|   Microservice 1  |  |   Microservice 2  |  |   Microservice 3  |
+|       repo        |  |        repo       |  |        repo       |
++-------------------+  +-------------------+  +-------------------+
+</code></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/#L36-L57">[~]</a></p>
+<ul>
+<li>
+<p><code>repository_host</code> - an http url which will be used for creating a link to a file in a
+repository. For example, if you want to add links to your files for each section you can pass
+a value like <code>https://github.com/user_name/project_name/blob/master</code>. It will be used for
+creating an url like this
+<code>https://github.com/user_name/project_name/blob/master/path/to/your/file.txt</code>.
+<a href="https://github.com/daynin/fundoc/blob/master/#L61-L67">[~]</a></p>
+</li>
+<li>
+<p><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</p>
+</li>
+<li>
+<p><code>comment_prefix</code> - a comment line prefix. Example: *</p>
+</li>
+<li>
+<p><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
+<a href="https://github.com/daynin/fundoc/blob/master/#L71-L75">[~]</a></p>
+</li>
+</ul>
+<p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
+<code>book_name</code> - a name of the result book.
+<code>book_build_dir</code> - a directory that contains the build result.
+<a href="https://github.com/daynin/fundoc/blob/master/#L81-L85">[~]</a></p>
+<p>Fundoc will read all the configuration parameters from the <code>fundoc.json</code> config file
+which should be placed into the working directory of the programm's process (generally, it's a root of a
+project)
+<a href="https://github.com/daynin/fundoc/blob/master/#L93-L97">[~]</a></p>
+<p>Configuration parameters:
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L9-L11">[~]</a></p>
+<ul>
+<li><code>docs_folder</code> - a path to a folder which will contain all generated documents.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong> be careful, all files in the <code>docs_folder</code> will be replaced by documentation files.
+<a href="https://github.com/daynin/fundoc/blob/master/#L16-L20">[~]</a></p>
+</blockquote>
+<ul>
+<li>
+<p><code>project_path</code> - an entry point for the parser
+<a href="https://github.com/daynin/fundoc/blob/master/#L24-L26">[~]</a></p>
+</li>
+<li>
+<p><code>files_patterns</code> - unix style pathname patterns for matching files which will be parsed.
+<a href="https://github.com/daynin/fundoc/blob/master/#L30-L32">[~]</a></p>
+</li>
+<li>
+<p><code>repositories</code> - you can specify a repository list by setting to parse and generate documentation from all
+repositories from the list. It can be useful if you have many repositories.</p>
+</li>
+</ul>
+<p>For example a microservices architecture:</p>
+<pre><code>
+                       +-------------------+
+                       |                   |
+          +------------+   Documentation   +------------+
+          |            |        repo       |            |
+          |            +---------+---------+            |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
++-------------------+  +---------|---------+  +---------|---------+
+|                   |  |                   |  |                   |
+|   Microservice 1  |  |   Microservice 2  |  |   Microservice 3  |
+|       repo        |  |        repo       |  |        repo       |
++-------------------+  +-------------------+  +-------------------+
+</code></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/#L36-L57">[~]</a></p>
+<ul>
+<li>
+<p><code>repository_host</code> - an http url which will be used for creating a link to a file in a
+repository. For example, if you want to add links to your files for each section you can pass
+a value like <code>https://github.com/user_name/project_name/blob/master</code>. It will be used for
+creating an url like this
+<code>https://github.com/user_name/project_name/blob/master/path/to/your/file.txt</code>.
+<a href="https://github.com/daynin/fundoc/blob/master/#L61-L67">[~]</a></p>
+</li>
+<li>
+<p><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</p>
+</li>
+<li>
+<p><code>comment_prefix</code> - a comment line prefix. Example: *</p>
+</li>
+<li>
+<p><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
+<a href="https://github.com/daynin/fundoc/blob/master/#L71-L75">[~]</a></p>
+</li>
+</ul>
+<p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
+<code>book_name</code> - a name of the result book.
+<code>book_build_dir</code> - a directory that contains the build result.
+<a href="https://github.com/daynin/fundoc/blob/master/#L81-L85">[~]</a></p>
+<p>Fundoc will read all the configuration parameters from the <code>fundoc.json</code> config file
+which should be placed into the working directory of the programm's process (generally, it's a root of a
+project)
+<a href="https://github.com/daynin/fundoc/blob/master/#L93-L97">[~]</a></p>
+<p>Configuration parameters:
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L9-L11">[~]</a></p>
+<ul>
+<li><code>docs_folder</code> - a path to a folder which will contain all generated documents.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong> be careful, all files in the <code>docs_folder</code> will be replaced by documentation files.
+<a href="https://github.com/daynin/fundoc/blob/master/#L16-L20">[~]</a></p>
+</blockquote>
+<ul>
+<li>
+<p><code>project_path</code> - an entry point for the parser
+<a href="https://github.com/daynin/fundoc/blob/master/#L24-L26">[~]</a></p>
+</li>
+<li>
+<p><code>files_patterns</code> - unix style pathname patterns for matching files which will be parsed.
+<a href="https://github.com/daynin/fundoc/blob/master/#L30-L32">[~]</a></p>
+</li>
+<li>
+<p><code>repositories</code> - you can specify a repository list by setting to parse and generate documentation from all
+repositories from the list. It can be useful if you have many repositories.</p>
+</li>
+</ul>
+<p>For example a microservices architecture:</p>
+<pre><code>
+                       +-------------------+
+                       |                   |
+          +------------+   Documentation   +------------+
+          |            |        repo       |            |
+          |            +---------+---------+            |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
++-------------------+  +---------|---------+  +---------|---------+
+|                   |  |                   |  |                   |
+|   Microservice 1  |  |   Microservice 2  |  |   Microservice 3  |
+|       repo        |  |        repo       |  |        repo       |
++-------------------+  +-------------------+  +-------------------+
+</code></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/#L36-L57">[~]</a></p>
+<ul>
+<li>
+<p><code>repository_host</code> - an http url which will be used for creating a link to a file in a
+repository. For example, if you want to add links to your files for each section you can pass
+a value like <code>https://github.com/user_name/project_name/blob/master</code>. It will be used for
+creating an url like this
+<code>https://github.com/user_name/project_name/blob/master/path/to/your/file.txt</code>.
+<a href="https://github.com/daynin/fundoc/blob/master/#L61-L67">[~]</a></p>
+</li>
+<li>
+<p><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</p>
+</li>
+<li>
+<p><code>comment_prefix</code> - a comment line prefix. Example: *</p>
+</li>
+<li>
+<p><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
+<a href="https://github.com/daynin/fundoc/blob/master/#L71-L75">[~]</a></p>
+</li>
+</ul>
+<p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
+<code>book_name</code> - a name of the result book.
+<code>book_build_dir</code> - a directory that contains the build result.
+<a href="https://github.com/daynin/fundoc/blob/master/#L81-L85">[~]</a></p>
+<p>Fundoc will read all the configuration parameters from the <code>fundoc.json</code> config file
+which should be placed into the working directory of the programm's process (generally, it's a root of a
+project)
+<a href="https://github.com/daynin/fundoc/blob/master/#L93-L97">[~]</a></p>
+<p>Configuration parameters:
+<a href="https://github.com/daynin/fundoc/blob/master/src/config.rs#L9-L11">[~]</a></p>
+<ul>
+<li><code>docs_folder</code> - a path to a folder which will contain all generated documents.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong> be careful, all files in the <code>docs_folder</code> will be replaced by documentation files.
+<a href="https://github.com/daynin/fundoc/blob/master/#L16-L20">[~]</a></p>
+</blockquote>
+<ul>
+<li>
+<p><code>project_path</code> - an entry point for the parser
+<a href="https://github.com/daynin/fundoc/blob/master/#L24-L26">[~]</a></p>
+</li>
+<li>
+<p><code>files_patterns</code> - unix style pathname patterns for matching files which will be parsed.
+<a href="https://github.com/daynin/fundoc/blob/master/#L30-L32">[~]</a></p>
+</li>
+<li>
+<p><code>repositories</code> - you can specify a repository list by setting to parse and generate documentation from all
+repositories from the list. It can be useful if you have many repositories.</p>
+</li>
+</ul>
+<p>For example a microservices architecture:</p>
+<pre><code>
+                       +-------------------+
+                       |                   |
+          +------------+   Documentation   +------------+
+          |            |        repo       |            |
+          |            +---------+---------+            |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
+          |                      |                      |
++-------------------+  +---------|---------+  +---------|---------+
+|                   |  |                   |  |                   |
+|   Microservice 1  |  |   Microservice 2  |  |   Microservice 3  |
+|       repo        |  |        repo       |  |        repo       |
++-------------------+  +-------------------+  +-------------------+
+</code></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/#L36-L57">[~]</a></p>
+<ul>
+<li>
+<p><code>repository_host</code> - an http url which will be used for creating a link to a file in a
+repository. For example, if you want to add links to your files for each section you can pass
+a value like <code>https://github.com/user_name/project_name/blob/master</code>. It will be used for
+creating an url like this
+<code>https://github.com/user_name/project_name/blob/master/path/to/your/file.txt</code>.
+<a href="https://github.com/daynin/fundoc/blob/master/#L61-L67">[~]</a></p>
+</li>
+<li>
+<p><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</p>
+</li>
+<li>
+<p><code>comment_prefix</code> - a comment line prefix. Example: *</p>
+</li>
+<li>
+<p><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
+<a href="https://github.com/daynin/fundoc/blob/master/#L71-L75">[~]</a></p>
+</li>
+</ul>
+<p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
+<code>book_name</code> - a name of the result book.
+<code>book_build_dir</code> - a directory that contains the build result.
+<a href="https://github.com/daynin/fundoc/blob/master/#L81-L85">[~]</a></p>
+<p>Fundoc will read all the configuration parameters from the <code>fundoc.json</code> config file
+which should be placed into the working directory of the programm's process (generally, it's a root of a
+project)
+<a href="https://github.com/daynin/fundoc/blob/master/#L93-L97">[~]</a></p>
+<p>You can disable parsing for a part of your file or a whole file by adding this comment: <code>fundoc-disable</code>.
 If you wan't to turn fundoc on few lines below just add this comment: <code>fundoc-enable</code>.</p>
 <p>In case when you don't write the enable-comment all text from disable comment until the end of
 the file will be ignored
-<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L190-L196">[~]</a></p>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="syntax"><a class="header" href="#syntax">Syntax</a></h1>
-<p><code>@Article &lt;Article name&gt;</code> is for marking documentation sections to tell in which articale this section should
+<a href="https://github.com/daynin/fundoc/blob/master/#L192-L198">[~]</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="syntax"><a class="header" href="#syntax">Syntax</a></h1>
+<p><code>@Article &lt;Article name&gt;</code> is for marking documentation sections to tell in which article this section should
 be merged. You can use <code>markdown</code> syntax in documentation sections.</p>
 <p>Example:</p>
 <pre><pre class="playground"><code class="language-rust">/**
@@ -253,10 +576,9 @@ be merged. You can use <code>markdown</code> syntax in documentation sections.</
  *
  * Some text
  */
-fn main() {}
-</code></pre></pre>
+fn main() {}</code></pre></pre>
 <p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L34-L50">[~]</a></p>
-<p><code>@FileArtcile</code> allows you to mark a whole file is a source of documentation for a specified
+<p><code>@FileArticle</code> allows you to mark a whole file is a source of documentation for a specified
 article.</p>
 <p>Example:</p>
 <pre><pre class="playground"><code class="language-rust">/**
@@ -271,8 +593,7 @@ fn main() {}
 /**
  * Documentation for `parse_files`
  */
-fn parse_files() {}
-</code></pre></pre>
+fn parse_files() {}</code></pre></pre>
 <p>In that case all comments from a file will be parsed in the same way if they were marked with
 <code>@Article How it works</code></p>
 <p>If you want to exclude some comment from parsing you need to use <code>@Ignore</code> attribute in that
@@ -291,14 +612,12 @@ fn main() {}
  * @Ignore
  * This comment will be ignored.
  */
-fn parse_files() {}
-</code></pre></pre>
-<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L54-L98">[~]</a></p>
+fn parse_files() {}</code></pre></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/#L54-L98">[~]</a></p>
 <p><code>@CodeBlockStart &lt;Programming Language&gt;</code> and <code>@CodeBlockEnd</code> allow to include code from a current file as an
 example.</p>
 <p>Example:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>/**
 * @Article Usage examples
@@ -309,19 +628,16 @@ calc_size(item)
 /**
 * @CodeBlockEnd
 */
-<span class="boring">}
-</span></code></pre></pre>
-<p><a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L102-L118">[~]</a></p>
+<span class="boring">}</span></code></pre></pre>
+<p><a href="https://github.com/daynin/fundoc/blob/master/#L102-L118">[~]</a></p>
 <p><code>@Ignore</code> is for ignoring a marked documentation section.
-<a href="https://github.com/daynin/fundoc/blob/master/src/parser.rs#L123-L124">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L123-L124">[~]</a></p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        
 
-                        
 
                         <div style="clear: both"></div>
                     </nav>
@@ -329,49 +645,35 @@ calc_size(item)
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                
 
-                
             </nav>
 
         </div>
 
-        
 
-        
 
-        
 
-        
-        <script type="text/javascript">
+        <script>
             window.playground_copyable = true;
         </script>
-        
 
-        
 
-        
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
 
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        
 
-        
-        
-        <script type="text/javascript">
+        <script>
         window.addEventListener('load', function() {
             window.setTimeout(window.print, 100);
         });
         </script>
-        
-        
 
+    </div>
     </body>
 </html>

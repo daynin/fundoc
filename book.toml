@@ -8,4 +8,5 @@ title = "Fundoc"
 [build]
 build-dir = "./docs"
 create-missing = true
+extra-watch-dirs = []
 use-default-preprocessors = true

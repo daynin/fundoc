@@ -192,7 +192,7 @@ pub fn create_default_config() {
     .unwrap();
 
     match File::create("./fundoc.json") {
-        Ok(mut file) => match file.write_all(&config.as_bytes()) {
+        Ok(mut file) => match file.write_all(config.as_bytes()) {
             Ok(_) => println!("Initialization is completed!",),
             Err(_) => println!("Cannot create the config file"),
         },
