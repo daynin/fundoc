@@ -5,6 +5,105 @@ use std::io::prelude::*;
 
 use crate::config;
 
+#[derive(Debug, PartialEq, Eq)]
+enum ParserState {
+    Initialized,
+    ArticleParsing,
+    ArticleEnding,
+    CommentParsing,
+    NestedCommentParsing,
+    CodeBlockParsing,
+    Skipping,
+}
+
+struct ParserStateMachine {
+    state: ParserState,
+}
+
+impl ParserStateMachine {
+    fn new() -> Self {
+        ParserStateMachine {
+            state: ParserState::Initialized,
+        }
+    }
+
+    fn to_skippintg_mut(&mut self) {
+        self.state = match self.state {
+            ParserState::Initialized => ParserState::Skipping,
+            ParserState::CommentParsing => ParserState::Skipping,
+            ParserState::CodeBlockParsing => ParserState::Skipping,
+            ParserState::ArticleParsing => ParserState::Skipping,
+            ParserState::ArticleEnding => ParserState::Skipping,
+            _ => panic!(
+                "Invalid state transition from {:?} to {:?}",
+                self.state,
+                ParserState::Skipping
+            ),
+        }
+    }
+
+    fn to_comment_section_mut(&mut self) {
+        self.state = match self.state {
+            ParserState::Initialized => ParserState::CommentParsing,
+            ParserState::Skipping => ParserState::CommentParsing,
+            _ => panic!(
+                "Invalid state transition from {:?} to {:?}",
+                self.state,
+                ParserState::CommentParsing
+            ),
+        }
+    }
+
+    fn to_nested_comment_section_mut(&mut self) {
+        self.state = match self.state {
+            ParserState::ArticleParsing => ParserState::NestedCommentParsing,
+            _ => panic!(
+                "Invalid state transition from {:?} to {:?}",
+                self.state,
+                ParserState::NestedCommentParsing
+            ),
+        }
+    }
+
+    fn to_code_block_mut(&mut self) {
+        self.state = match self.state {
+            ParserState::ArticleParsing => ParserState::CodeBlockParsing,
+            _ => panic!(
+                "Invalid state transition from {:?} to {:?}",
+                self.state,
+                ParserState::CodeBlockParsing
+            ),
+        }
+    }
+
+    fn to_article_mut(&mut self) {
+        self.state = match self.state {
+            ParserState::CommentParsing => ParserState::ArticleParsing,
+            ParserState::NestedCommentParsing => ParserState::ArticleParsing,
+            _ => panic!(
+                "Invalid state transition from {:?} to {:?}",
+                self.state,
+                ParserState::ArticleParsing
+            ),
+        }
+    }
+
+    fn to_article_ending_mut(&mut self) {
+        self.state = match self.state {
+            ParserState::ArticleParsing => ParserState::ArticleEnding,
+            _ => panic!(
+                "Invalid state transition from {:?} to {:?}",
+                self.state,
+                ParserState::ArticleEnding
+            ),
+        }
+    }
+
+    fn is_in(&self, state: ParserState) -> bool {
+        self.state == state
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Article {
     pub topic: String,
@@ -139,11 +238,7 @@ impl Keyword {
 }
 
 pub struct Parser {
-    is_article_section: bool,
-    is_comment_section: bool,
-    is_code_block_section: bool,
-    is_nested_comment_section: bool,
-
+    state_machine: ParserStateMachine,
     comment_symbol: char,
     start_comment: String,
     end_comment: String,
@@ -174,10 +269,7 @@ impl Parser {
         };
 
         Self {
-            is_article_section: false,
-            is_comment_section: false,
-            is_nested_comment_section: false,
-            is_code_block_section: false,
+            state_machine: ParserStateMachine::new(),
             code_block: String::from(""),
             file_global_topic: String::from(""),
             comment_symbol,
@@ -280,33 +372,42 @@ impl Parser {
 
     fn set_comment_boundaries(&mut self, line: &str) {
         match line.trim() {
-            l if l.starts_with(&self.start_comment) => {
-                self.is_comment_section = true;
+            l if l.starts_with(&self.start_comment)
+                && self.state_machine.is_in(ParserState::Skipping) =>
+            {
+                self.state_machine.to_comment_section_mut();
             }
-            l if l.ends_with(&self.start_comment) && self.is_comment_section => {
-                self.is_nested_comment_section = true;
+            l if l.ends_with(&self.start_comment)
+                && self.state_machine.is_in(ParserState::ArticleParsing) =>
+            {
+                println!("{:?}", self.state_machine.state);
+                self.state_machine.to_nested_comment_section_mut();
             }
-            l if l.ends_with(&self.end_comment) && self.is_nested_comment_section => {
-                self.is_nested_comment_section = false;
+            l if l.ends_with(&self.end_comment)
+                && self.state_machine.is_in(ParserState::NestedCommentParsing) =>
+            {
+                self.state_machine.to_article_mut();
             }
             l if l.ends_with(&self.end_comment)
                 && self.code_block.is_empty()
-                && !self.is_nested_comment_section =>
+                && self.state_machine.is_in(ParserState::ArticleParsing) =>
             {
-                self.is_comment_section = false;
+                self.state_machine.to_article_ending_mut();
             }
             _ => {}
         };
     }
 
     fn complete_article_parsing(&mut self, line_number: i16) {
-        self.is_article_section = false;
+        if !self.current_article.topic.is_empty() {
+            self.current_article.content = self.current_article.content.trim().to_string();
+            self.current_article.end_line = line_number - 1;
+            self.articles.push(self.current_article.clone());
 
-        self.current_article.content = self.current_article.content.trim().to_string();
-        self.current_article.end_line = line_number - 1;
-        self.articles.push(self.current_article.clone());
+            self.current_article = self.new_article();
+        }
 
-        self.current_article = self.new_article();
+        self.state_machine.to_skippintg_mut();
     }
 
     fn parse_article_content(&mut self, line: &str, line_number: i16) {
@@ -315,19 +416,21 @@ impl Parser {
         if trimmed_line.starts_with(Keyword::FileArticle.as_str()) {
             self.file_global_topic =
                 self.trim_article_line(line.replace(Keyword::FileArticle.as_str(), ""));
-        } else if !self.file_global_topic.is_empty() && !self.is_article_section {
+            self.state_machine.to_article_mut();
+        } else if !self.file_global_topic.is_empty()
+            && !self.state_machine.is_in(ParserState::ArticleParsing)
+        {
             self.current_article.topic = self.file_global_topic.clone();
             self.current_article.start_line = line_number;
-            self.is_article_section = true;
+            self.state_machine.to_article_mut();
         } else if trimmed_line.starts_with(Keyword::Article.as_str()) {
             let topic = line.replace(Keyword::Article.as_str(), "");
 
             self.current_article.topic = self.trim_article_line(topic);
             self.current_article.start_line = line_number;
-            self.is_article_section = true;
+            self.state_machine.to_article_mut();
         } else if trimmed_line.starts_with(Keyword::Ignore.as_str()) {
-            self.is_article_section = false;
-            self.is_comment_section = false;
+            self.state_machine.to_skippintg_mut();
             self.current_article = self.new_article();
             self.file_global_topic = String::from("");
         } else if trimmed_line.starts_with(Keyword::CodeBlockStart.as_str()) {
@@ -335,22 +438,23 @@ impl Parser {
                 self.trim_article_line(line.replace(Keyword::CodeBlockStart.as_str(), ""));
 
             self.current_article.content += format!("```{}", self.code_block).as_str();
-            self.is_code_block_section = true;
-        } else if self.is_code_block_section
+            self.state_machine.to_code_block_mut();
+        } else if self.state_machine.is_in(ParserState::CodeBlockParsing)
             && (trimmed_line.starts_with(self.start_comment.as_str())
                 || trimmed_line.starts_with(Keyword::CodeBlockEnd.as_str()))
         {
             self.code_block = "".to_string();
             self.current_article.content += "```";
-            self.is_comment_section = false;
-            self.is_article_section = false;
-            self.is_code_block_section = false;
 
             self.current_article.end_line = line_number - 1;
             self.articles.push(self.current_article.clone());
 
             self.current_article = self.new_article();
-        } else if self.is_article_section {
+            self.state_machine.to_skippintg_mut();
+        } else if self.state_machine.is_in(ParserState::ArticleParsing)
+            || self.state_machine.is_in(ParserState::CodeBlockParsing)
+            || self.state_machine.is_in(ParserState::NestedCommentParsing)
+        {
             self.current_article.content += &format!("{}\n", self.parse_text(line));
         }
     }
@@ -364,16 +468,14 @@ impl Parser {
 
         let mut line_number = 1;
 
-        self.is_comment_section = false;
-        self.is_nested_comment_section = false;
-        self.is_article_section = false;
+        self.state_machine.to_skippintg_mut();
 
         for line in file_content.lines() {
             self.set_comment_boundaries(line);
 
-            if !self.is_comment_section && self.is_article_section {
+            if self.state_machine.is_in(ParserState::ArticleEnding) {
                 self.complete_article_parsing(line_number);
-            } else if self.is_comment_section {
+            } else if !self.state_machine.is_in(ParserState::Skipping) {
                 self.parse_article_content(line, line_number);
             }
 
@@ -901,4 +1003,13 @@ fn parse_fdoc_file_check() {
     }];
 
     assert_eq!(result, expected_result);
+}
+
+#[test]
+fn check_state_machine_state_comparator() {
+    let mut state_machine = ParserStateMachine::new();
+    state_machine.to_comment_section_mut();
+
+    assert_eq!(state_machine.is_in(ParserState::CommentParsing), true);
+    assert_eq!(state_machine.is_in(ParserState::Skipping), false);
 }

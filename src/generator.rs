@@ -25,7 +25,7 @@ fn merge_docs(
 
     for article in articles {
         let file_name = article.topic.to_lowercase();
-        let file_name = file_name.replace(" ", "_");
+        let file_name = file_name.replace(' ', "_");
         let key = file_name.clone();
 
         let document = documentation.entry(key).or_insert(Document {
