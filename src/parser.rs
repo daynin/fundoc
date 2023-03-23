@@ -34,6 +34,7 @@ impl ParserStateMachine {
             ParserState::CodeBlockParsing => ParserState::Skipping,
             ParserState::ArticleParsing => ParserState::Skipping,
             ParserState::ArticleEnding => ParserState::Skipping,
+            ParserState::Skipping => ParserState::Skipping,
             _ => panic!(
                 "Invalid state transition from {:?} to {:?}",
                 self.state,
@@ -380,7 +381,6 @@ impl Parser {
             l if l.ends_with(&self.start_comment)
                 && self.state_machine.is_in(ParserState::ArticleParsing) =>
             {
-                println!("{:?}", self.state_machine.state);
                 self.state_machine.to_nested_comment_section_mut();
             }
             l if l.ends_with(&self.end_comment)
@@ -460,6 +460,8 @@ impl Parser {
     }
 
     fn parse_file(&mut self, file_content: &str, file_path: &str) -> Vec<Article> {
+        self.articles = vec![];
+
         if file_path.ends_with(".fdoc.md") {
             return self.parse_fdoc_file(file_content, file_path);
         }
