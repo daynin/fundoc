@@ -4,10 +4,13 @@ mod config;
 mod fs_utils;
 mod generator;
 mod git;
+mod lua_runtime;
 mod parser;
-use std::fs;
+mod plugins;
 
 use ansi_term::Colour;
+use plugins::Plugins;
+use std::fs;
 
 fn parse_articles(config: config::Config, root: &str) -> Vec<parser::Article> {
     let mut parser = parser::Parser::new(config.clone());
@@ -37,13 +40,18 @@ fn parse_articles(config: config::Config, root: &str) -> Vec<parser::Article> {
 }
 
 fn generate_book(config: config::Config) {
-    book::init_book(config);
+    /* book::init_book(config); */
     book::build_book();
 }
 
 fn main() {
-    if cli::create_cli().contains_id("init") {
+    let args = cli::create_cli();
+
+    if let Some(true) = args.get_one::<bool>("init") {
         config::create_default_config()
+    } else if let Some(true) = args.get_one::<bool>("extension") {
+        let plugins = plugins::Plugins::new(lua_runtime::LuaRuntime::new());
+        plugins.run_as_plugin();
     } else {
         match config::read_config(None) {
             Some(config) => {

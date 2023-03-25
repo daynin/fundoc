@@ -10,3 +10,6 @@ build-dir = "./docs"
 create-missing = true
 extra-watch-dirs = []
 use-default-preprocessors = true
+
+[preprocessor.mermaid]
+command = "./target/debug/fundoc -e"

@@ -23,4 +23,5 @@ clap = "4.1.8"
 mdbook = "0.4.28"
 dialoguer = "0.10.3"
 url = "2.3.1"
+rlua = "0.19.4"
 

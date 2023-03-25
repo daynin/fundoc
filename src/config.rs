@@ -38,23 +38,13 @@ pub struct Config {
      * repositories from the list. It can be useful if you have many repositories.
      *
      * For example a microservices architecture:
-     * ```
      *
-     *                        +-------------------+
-     *                        |                   |
-     *           +------------+   Documentation   +------------+
-     *           |            |        repo       |            |
-     *           |            +---------+---------+            |
-     *           |                      |                      |
-     *           |                      |                      |
-     *           |                      |                      |
-     *           |                      |                      |
-     * +-------------------+  +---------|---------+  +---------|---------+
-     * |                   |  |                   |  |                   |
-     * |   Microservice 1  |  |   Microservice 2  |  |   Microservice 3  |
-     * |       repo        |  |        repo       |  |        repo       |
-     * +-------------------+  +-------------------+  +-------------------+
-     * ```
+     * {{ #mermaid
+     * flowchart TD;
+     *   A[Documentaion repo] --> B[A repo of Mecroservice 1];
+     *   A --> C[A repo of Mecroservice 2];
+     *   A --> D[A repo of Mecroservice 3];
+     * }}
      */
     pub repositories: Option<Vec<String>>,
     /**
