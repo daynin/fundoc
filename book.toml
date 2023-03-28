@@ -13,3 +13,4 @@ use-default-preprocessors = true
 
 [preprocessor.mermaid]
 command = "./target/debug/fundoc -e"
+

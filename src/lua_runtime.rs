@@ -11,7 +11,7 @@ impl LuaRuntime {
         }
     }
 
-    pub fn exec<F>(&self, lua_code: String, lambda: F) where F: FnOnce(Context) -> () {
+    pub fn exec(&self, lua_code: String) {
         self.runtime.context(|ctx| {
             let globals = ctx.globals();
             let log = ctx.create_function(|_, msg: String| {
@@ -21,8 +21,16 @@ impl LuaRuntime {
 
             globals.set("log", log);
 
-            lambda(ctx);
             ctx.load(&lua_code).exec();
         });
+    }
+
+    pub fn call_transform(&self, text: String) -> Result<String> {
+        self.runtime.context(|ctx| {
+            let transform: Function = ctx.globals().get("transform")?;
+            transform.call::<_, ()>(text);
+
+            ctx.globals().get::<_, String>("result")
+        })
     }
 }

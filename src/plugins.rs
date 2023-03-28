@@ -1,4 +1,5 @@
-use mdbook::book::BookItem;
+use clap::builder::PathBufValueParser;
+use mdbook::book::{BookItem, Chapter};
 use mdbook::preprocess::{CmdPreprocessor, Preprocessor, PreprocessorContext};
 use regex::Regex;
 use std::{env, fs, io, process};
@@ -7,20 +8,6 @@ use crate::lua_runtime;
 
 pub struct Plugins {
     lua_runtime: lua_runtime::LuaRuntime,
-}
-
-fn between<'value>(value: &'value str, a: &str, b: &str) -> &'value str {
-    // Find the two strings.
-    if let Some(pos_a) = value.find(a) {
-        if let Some(pos_b) = value.rfind(b) {
-            // Return the part in between the 2 strings.
-            let adjusted_pos_a = &pos_a + a.len();
-            if adjusted_pos_a < pos_b {
-                return &value[adjusted_pos_a..pos_b];
-            }
-        }
-    }
-    return "";
 }
 
 impl Plugins {
@@ -36,40 +23,52 @@ impl Plugins {
             process::exit(0x0100);
         }
 
-        let (ctx, book) = CmdPreprocessor::parse_input(io::stdin()).unwrap();
+        let (ctx, mut book) = CmdPreprocessor::parse_input(io::stdin()).unwrap();
 
         let re = Regex::new(r"\{\{ #mermaid[\w\W]*\}\}").unwrap();
 
-        match paths {
-            Ok(paths) => {
-                for file in paths {
-                    match file {
-                        Ok(file) => {
-                            for section in book.sections.iter() {
-                                match section {
-                                    BookItem::Chapter(chapter) => {
-                                        for capture in re.captures(&chapter.content) {
-                                            let plugin_src =
-                                                fs::read_to_string(&file.path()).unwrap();
-                                            self.lua_runtime.exec(plugin_src, |ctx| {
-                                                let globals = ctx.globals();
-                                                let text = capture.get(0).map_or("", |c| c.as_str());
-                                                globals.set(
-                                                    "parsed_chunk",
-                                                    text,
-                                                );
-                                            });
-                                        }
-                                    }
-                                    _ => {}
+        for file in paths.unwrap() {
+            match file {
+                Ok(file) => {
+                    let plugin_src = fs::read_to_string(&file.path()).unwrap();
+                    book.sections = book.sections.iter().map(|section| {
+                        match section {
+                            BookItem::Chapter(chapter) => {
+                                let mut content = chapter.content.clone();
+
+                                for capture in re.captures(&content.clone()) {
+                                    let src_text =
+                                        capture.get(0).map_or("", |c| c.as_str()).to_string();
+
+                                    let parsed_fragment = self.parse_chapter(plugin_src.clone(), src_text.clone());
+                                    content = content.replace(&src_text, &parsed_fragment);
+
                                 }
+
+                                BookItem::Chapter(Chapter {
+                                    content,
+                                    ..chapter.clone()
+                                })
                             }
+                            _ => section.clone()
                         }
-                        _ => {}
-                    }
+                    }).collect();
+
+                    serde_json::to_writer(io::stdout(), &book);
                 }
+                _ => {}
             }
-            _ => {}
         }
+    }
+
+    fn parse_chapter(&self, lua_src: String, src_text: String) -> String {
+        self.lua_runtime.exec(lua_src);
+
+        let mut extracted_text = src_text.replace("{{ #mermaid", "");
+        extracted_text = extracted_text.replace("}}", "");
+
+        let result = self.lua_runtime.call_transform(extracted_text).unwrap();
+
+        result
     }
 }

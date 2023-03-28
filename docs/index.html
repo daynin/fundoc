@@ -169,23 +169,13 @@ repositories from the list. It can be useful if you have many repositories.</p>
 </li>
 </ul>
 <p>For example a microservices architecture:</p>
-<pre><code>
-                       +-------------------+
-                       |                   |
-          +------------+   Documentation   +------------+
-          |            |        repo       |            |
-          |            +---------+---------+            |
-          |                      |                      |
-          |                      |                      |
-          |                      |                      |
-          |                      |                      |
-+-------------------+  +---------|---------+  +---------|---------+
-|                   |  |                   |  |                   |
-|   Microservice 1  |  |   Microservice 2  |  |   Microservice 3  |
-|       repo        |  |        repo       |  |        repo       |
-+-------------------+  +-------------------+  +-------------------+
-</code></pre>
-<p><a href="https://github.com/daynin/fundoc/blob/master/#L36-L57">[~]</a></p>
+<pre class="mermaid">
+flowchart TD;
+  A[Documentaion repo] --> B[A repo of Mecroservice 1];
+  A --> C[A repo of Mecroservice 2];
+  A --> D[A repo of Mecroservice 3];
+</pre><script type="module"> import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.0.2/+esm"; mermaid.initialize({}); </script>
+<p><a href="https://github.com/daynin/fundoc/blob/master/#L36-L47">[~]</a></p>
 <ul>
 <li>
 <p><code>repository_host</code> - an http url which will be used for creating a link to a file in a
@@ -193,7 +183,7 @@ repository. For example, if you want to add links to your files for each section
 a value like <code>https://github.com/user_name/project_name/blob/master</code>. It will be used for
 creating an url like this
 <code>https://github.com/user_name/project_name/blob/master/path/to/your/file.txt</code>.
-<a href="https://github.com/daynin/fundoc/blob/master/#L61-L67">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L51-L57">[~]</a></p>
 </li>
 <li>
 <p><code>comment_start_string</code> - a string which marks the start of a comments block. Example: /**</p>
@@ -203,17 +193,17 @@ creating an url like this
 </li>
 <li>
 <p><code>comment_end_string</code> - a string which marks the end of a comments block. Example: */
-<a href="https://github.com/daynin/fundoc/blob/master/#L71-L75">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L61-L65">[~]</a></p>
 </li>
 </ul>
 <p><code>mdbook</code> - if true generates documentation in format of <a href="https://rust-lang.github.io/mdBook/index.html">mdBook</a>.
 <code>book_name</code> - a name of the result book.
 <code>book_build_dir</code> - a directory that contains the build result.
-<a href="https://github.com/daynin/fundoc/blob/master/#L81-L85">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L71-L75">[~]</a></p>
 <p>Fundoc will read all the configuration parameters from the <code>fundoc.json</code> config file
 which should be placed into the working directory of the programm's process (generally, it's a root of a
 project)
-<a href="https://github.com/daynin/fundoc/blob/master/#L93-L97">[~]</a></p>
+<a href="https://github.com/daynin/fundoc/blob/master/#L83-L87">[~]</a></p>
 <p>You can disable parsing for a part of your file or a whole file by adding this comment: <code>fundoc-disable</code>.
 If you wan't to turn fundoc on few lines below just add this comment: <code>fundoc-enable</code>.</p>
 <p>In case when you don't write the enable-comment all text from disable comment until the end of
