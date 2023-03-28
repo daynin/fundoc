@@ -4,19 +4,25 @@ use mdbook::preprocess::{CmdPreprocessor, Preprocessor, PreprocessorContext};
 use regex::Regex;
 use std::{env, fs, io, process};
 
+use crate::config;
 use crate::lua_runtime;
 
 pub struct Plugins {
     lua_runtime: lua_runtime::LuaRuntime,
+    config: config::Config,
 }
 
 impl Plugins {
-    pub fn new(lua_runtime: lua_runtime::LuaRuntime) -> Self {
-        Self { lua_runtime }
+    pub fn new(lua_runtime: lua_runtime::LuaRuntime, config: config::Config) -> Self {
+        Self { lua_runtime, config }
     }
 
     pub fn run_as_plugin(&self) {
-        let paths = fs::read_dir("./plugins/preprocessors/");
+        if self.config.plugins_dir.is_none() {
+            ()
+        }
+
+        let paths = fs::read_dir(self.config.plugins_dir.as_ref().unwrap());
         let args: Vec<String> = env::args().collect();
 
         if args.len() > 3 {

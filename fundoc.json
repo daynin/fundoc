@@ -10,5 +10,6 @@
   "comment_end_string": null,
   "mdbook": true,
   "book_name": "Fundoc",
-  "book_build_dir": "./docs"
+  "book_build_dir": "./docs",
+  "plugins_dir": "./plugins"
 }

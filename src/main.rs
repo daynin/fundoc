@@ -50,8 +50,13 @@ fn main() {
     if let Some(true) = args.get_one::<bool>("init") {
         config::create_default_config()
     } else if let Some(true) = args.get_one::<bool>("extension") {
-        let plugins = plugins::Plugins::new(lua_runtime::LuaRuntime::new());
-        plugins.run_as_plugin();
+        match config::read_config(None) {
+            Some(config) => {
+                let plugins = plugins::Plugins::new(lua_runtime::LuaRuntime::new(), config);
+                plugins.run_as_plugin();
+            },
+            _ => {},
+        }
     } else {
         match config::read_config(None) {
             Some(config) => {

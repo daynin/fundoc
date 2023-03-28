@@ -77,6 +77,12 @@ pub struct Config {
     pub mdbook: Option<bool>,
     pub book_name: Option<String>,
     pub book_build_dir: Option<String>,
+    /**
+     * @Article Configuration
+     *
+     * `plugins_dir` - path to the plugins directory.
+     */
+    pub plugins_dir: Option<String>,
 }
 
 /**
@@ -178,6 +184,7 @@ pub fn create_default_config() {
         comment_start_string: None,
         comment_end_string: None,
         comment_prefix: None,
+        plugins_dir: Some(String::from("./plugins")),
     })
     .unwrap();
 
