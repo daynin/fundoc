@@ -1,6 +1,5 @@
-use clap::builder::PathBufValueParser;
 use mdbook::book::{BookItem, Chapter};
-use mdbook::preprocess::{CmdPreprocessor, Preprocessor, PreprocessorContext};
+use mdbook::preprocess::CmdPreprocessor;
 use regex::Regex;
 use std::{env, fs, io, process};
 
@@ -30,6 +29,7 @@ impl Plugins {
         }
 
         let (ctx, mut book) = CmdPreprocessor::parse_input(io::stdin()).unwrap();
+        eprintln!("{:?}", ctx);
 
         let re = Regex::new(r"\{\{ #mermaid[\w\W]*\}\}").unwrap();
 
