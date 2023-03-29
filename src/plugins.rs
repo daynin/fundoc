@@ -22,7 +22,7 @@ impl Plugins {
 
     pub fn run_as_plugin(&self) -> Result<(), Error> {
         if self.config.plugins_dir.is_none() {
-            ()
+            panic!("There's no a plugin directory");
         }
 
         let paths = fs::read_dir(self.config.plugins_dir.as_ref().unwrap());
@@ -36,52 +36,47 @@ impl Plugins {
         let preprocessor = self.parse_private_preprocessor_value(format!("{:?}", ctx));
 
 
-        for file in paths.unwrap() {
-            match file {
-                Ok(file) => {
-                    let file_path = file.path();
-                    let (Some(preprocessor_value), Some(path_str)) = (&preprocessor, file_path.to_str()) else {
-                        serde_json::to_writer(io::stdout(), &book)?;
-                        break;
-                    };
+        for file in paths.unwrap().flatten() {
+            let file_path = file.path();
+            let (Some(preprocessor_value), Some(path_str)) = (&preprocessor, file_path.to_str()) else {
+                serde_json::to_writer(io::stdout(), &book)?;
+                break;
+            };
 
-                    if !path_str.contains(preprocessor_value) {
-                        serde_json::to_writer(io::stdout(), &book)?;
-                        break;
-                    };
-                    let regex_str = String::from(r"\{\{ #") + preprocessor_value + r"[\w\W]*\}\}";
-                    let re = Regex::new(&regex_str).unwrap();
+            if !path_str.contains(preprocessor_value) {
+                serde_json::to_writer(io::stdout(), &book)?;
+                break;
+            };
+            let regex_str = String::from(r"\{\{ #") + preprocessor_value + r"[\w\W]*\}\}";
+            let re = Regex::new(&regex_str).unwrap();
 
-                    let plugin_src = fs::read_to_string(file_path).unwrap();
-                    book.sections = book
-                        .sections
-                        .iter()
-                        .map(|section| match section {
-                            BookItem::Chapter(chapter) => {
-                                let mut content = chapter.content.clone();
+            let plugin_src = fs::read_to_string(file_path).unwrap();
+            book.sections = book
+                .sections
+                .iter()
+                .map(|section| match section {
+                    BookItem::Chapter(chapter) => {
+                        let mut content = chapter.content.clone();
 
-                                for capture in re.captures_iter(&content.clone()) {
-                                    let src_text =
-                                        capture.get(0).map_or("", |c| c.as_str()).to_string();
+                        for capture in re.captures_iter(&content.clone()) {
+                            let src_text =
+                                capture.get(0).map_or("", |c| c.as_str()).to_string();
 
-                                    let parsed_fragment =
-                                        self.parse_chapter(preprocessor_value.to_string(), plugin_src.clone(), src_text.clone());
-                                    content = content.replace(&src_text, &parsed_fragment);
-                                }
+                            let parsed_fragment =
+                                self.parse_chapter(preprocessor_value.to_string(), plugin_src.clone(), src_text.clone());
+                            content = content.replace(&src_text, &parsed_fragment);
+                        }
 
-                                BookItem::Chapter(Chapter {
-                                    content,
-                                    ..chapter.clone()
-                                })
-                            }
-                            _ => section.clone(),
+                        BookItem::Chapter(Chapter {
+                            content,
+                            ..chapter.clone()
                         })
-                        .collect();
+                    }
+                    _ => section.clone(),
+                })
+                .collect();
 
-                    serde_json::to_writer(io::stdout(), &book)?;
-                }
-                _ => {}
-            }
+            serde_json::to_writer(io::stdout(), &book)?;
         }
 
         Ok(())

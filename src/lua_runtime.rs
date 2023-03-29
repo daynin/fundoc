@@ -20,16 +20,13 @@ impl LuaRuntime {
                     Ok(())
                 })
                 .unwrap();
+            if let Err(err) = globals.set("log", log) {
+                eprintln!("{:#?}", err)
+            }
 
-            match globals.set("log", log) {
-                Err(err) => eprintln!("{:#?}", err),
-                _ => {}
-            };
-
-            match ctx.load(&lua_code).exec() {
-                Err(err) => eprintln!("{:#?}", err),
-                _ => {}
-            };
+            if let Err(err) = ctx.load(&lua_code).exec() {
+                eprintln!("{:#?}", err)
+            }
         });
     }
 
@@ -37,9 +34,8 @@ impl LuaRuntime {
         self.runtime.context(|ctx| {
             let transform: Function = ctx.globals().get("transform")?;
 
-            match transform.call::<_, ()>(text) {
-                Err(err) => eprintln!("{:#?}", err),
-                _ => {}
+            if let Err(err) = transform.call::<_, ()>(text) {
+                eprintln!("{:#?}", err)
             }
 
             ctx.globals().get::<_, String>("result")
