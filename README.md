@@ -59,13 +59,6 @@ By the way, [documentation](https://csssr.github.io/fundoc/) here is generated b
 
 ### Installation
 
-You can install Fundoc by executing this shell script:
-
-```bash
-curl -LSfs https://japaric.github.io/trust/install.sh | \
-    sh -s -- --git daynin/fundoc
-```
-
 If you're rust developer and you have had rust compiler installed, you can install Fundoc from [crates.io](https://crates.io/):
 
 ```bash
