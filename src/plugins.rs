@@ -12,6 +12,45 @@ pub struct Plugins {
     config: config::Config,
 }
 
+/**
+ * @Article Plugins
+ *
+ * You can create a plugin for Fundoc to convert any text block of the following code in documentation:
+ *
+ * ```
+ * {{ #your-plugin-name any text here }}
+ *
+ * ```
+ *
+ * This insertion can be multiline as well:
+ *
+ * ```
+ * {{ #your-plugin-name
+ *  any text here
+ * }}
+ * 
+ * ```
+ *
+ * To create a plugin for parsing these blocks, you should add a file called `your-plugin-name.html.lua` into the plugins folder. By default, it's `./plugins`, but it's possible to change it in the config file.
+ * Then you should add the following strings into the `book.toml` file:
+ *
+ * ```toml
+ * [preprocessor.your-plugin-name]
+ * command = "fundoc -e"
+ * ```
+ * The `-e` artument runs Fundoc in mdBook extension mode.
+ *
+ * And in your your-plugin-name.html.lua, you should implement text transformation like this:
+ *
+ * ```lua
+ * function transform(text)
+ *   result = 'transformted text' 
+ * end
+ * ```
+ *
+ * Fundoc calls the `transform` function and passes the parsed text from the marked text block. You can transform it in any way you want.
+ *
+ */
 impl Plugins {
     pub fn new(lua_runtime: lua_runtime::LuaRuntime, config: config::Config) -> Self {
         Self {
@@ -28,6 +67,11 @@ impl Plugins {
         let paths = fs::read_dir(self.config.plugins_dir.as_ref().unwrap());
         let args: Vec<String> = env::args().collect();
 
+        /**
+         * @Article Plugins
+         * > [note] mdBook runs Fundoc twice. The first time fundoc should exit with 0 code. The
+         * second time Fundoc transforms the text.
+         */
         if args.len() > 3 {
             process::exit(0x0100);
         }

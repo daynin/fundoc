@@ -12,5 +12,5 @@ extra-watch-dirs = []
 use-default-preprocessors = true
 
 [preprocessor.mermaid]
-command = "./target/debug/fundoc -e"
+command = "fundoc -e"
 
