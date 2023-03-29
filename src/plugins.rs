@@ -35,7 +35,6 @@ impl Plugins {
         let (ctx, mut book) = CmdPreprocessor::parse_input(io::stdin()).unwrap();
         let preprocessor = self.parse_private_preprocessor_value(format!("{:?}", ctx));
 
-
         for file in paths.unwrap().flatten() {
             let file_path = file.path();
             let (Some(preprocessor_value), Some(path_str)) = (&preprocessor, file_path.to_str()) else {
@@ -58,12 +57,15 @@ impl Plugins {
                     BookItem::Chapter(chapter) => {
                         let mut content = chapter.content.clone();
 
+                        #[allow(clippy::redundant_clone)]
                         for capture in re.captures_iter(&content.clone()) {
-                            let src_text =
-                                capture.get(0).map_or("", |c| c.as_str()).to_string();
+                            let src_text = capture.get(0).map_or("", |c| c.as_str()).to_string();
 
-                            let parsed_fragment =
-                                self.parse_chapter(preprocessor_value.to_string(), plugin_src.clone(), src_text.clone());
+                            let parsed_fragment = self.parse_chapter(
+                                preprocessor_value.to_string(),
+                                plugin_src.clone(),
+                                src_text.clone(),
+                            );
                             content = content.replace(&src_text, &parsed_fragment);
                         }
 
@@ -86,9 +88,7 @@ impl Plugins {
         let re = Regex::new(r#""preprocessor": Table\(\{"*(.*?) *":"#).unwrap();
 
         match re.captures(&stringified_ctx) {
-            Some(captures) => captures
-                .get(1)
-                .map_or(None, |c| Some(String::from(c.as_str()))),
+            Some(captures) => captures.get(1).map(|c| String::from(c.as_str())),
             _ => None,
         }
     }
@@ -100,8 +100,6 @@ impl Plugins {
         let mut extracted_text = src_text.replace(&preprocessor_header, "");
         extracted_text = extracted_text.replace("}}", "");
 
-        let result = self.lua_runtime.call_transform(extracted_text).unwrap();
-
-        result
+        self.lua_runtime.call_transform(extracted_text).unwrap()
     }
 }

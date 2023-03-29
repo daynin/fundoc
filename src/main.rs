@@ -45,15 +45,11 @@ fn main() {
         let config = config::create_default_config();
         book::init_book(config);
     } else if let Some(true) = args.get_one::<bool>("extension") {
-        match config::read_config(None) {
-            Some(config) => {
-                let plugins = plugins::Plugins::new(lua_runtime::LuaRuntime::new(), config);
-                match plugins.run_as_plugin() {
-                    Err(err) => eprintln!("{:#?}", err),
-                    _ => {}
-                }
+        if let Some(config) = config::read_config(None) {
+            let plugins = plugins::Plugins::new(lua_runtime::LuaRuntime::new(), config);
+            if let Err(err) = plugins.run_as_plugin() {
+                eprintln!("{:#?}", err);
             }
-            _ => {}
         }
     } else {
         match config::read_config(None) {
