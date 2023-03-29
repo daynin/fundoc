@@ -96,6 +96,20 @@ Fundoc supports [mdBook](https://github.com/rust-lang/mdBook), so if you want to
     <img src="./images/full-text-search.gif" />
 </p>
 
+### Plugins
+
+You can write your own plugins to enhance Fundoc's abilities. To do so, you can simply write a Lua plugin like this:
+
+```lua
+function transform(text)
+  importMermaid = '<script type="module"> import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.0.2/+esm"; mermaid.initialize({}); </script>'
+
+  result = '<pre class="mermaid">' .. text .. '</pre>' .. importMermaid
+e
+```
+
+[Read more](https://daynin.github.io/fundoc/plugins.html) about plugins!
+
 ### Companies/projects who use Fundoc
 
 - [Space Twistie](https://github.com/Space-Twistie)
@@ -115,6 +129,9 @@ You can use [Fundoc's GitHub Action](https://github.com/daynin/fundoc-action) to
 - [x] Creating links to the source files from the documentation.
 - [x] Generating mdBook with an ability to search through documentation.
 - [x] Multi-repositories support (collecting all documentation fragments from different repos).
-- [ ] Add Graphviz support
+- [x] Add Mermaid support
+- [x] Add a plugin-system
+- [ ] Add file system API for the plugin system
+- [ ] Add FFI for the plugin system
 - [ ] Zettelkasten method support (maybe)
 
