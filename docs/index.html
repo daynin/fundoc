@@ -169,13 +169,13 @@ repositories from the list. It can be useful if you have many repositories.</p>
 </li>
 </ul>
 <p>For example a microservices architecture:</p>
-<p>{{ #mermaid
+<pre class="mermaid">
 flowchart TD;
-A[Documentaion repo] --&gt; B[A repo of Mecroservice 1];
-A --&gt; C[A repo of Mecroservice 2];
-A --&gt; D[A repo of Mecroservice 3];
-}}
-<a href="https://github.com/daynin/fundoc/blob/master/#L36-L47">[~]</a></p>
+  A[Documentaion repo] --> B[A repo of Mecroservice 1];
+  A --> C[A repo of Mecroservice 2];
+  A --> D[A repo of Mecroservice 3];
+</pre><script type="module"> import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.0.2/+esm"; mermaid.initialize({}); </script>
+<p><a href="https://github.com/daynin/fundoc/blob/master/#L36-L47">[~]</a></p>
 <ul>
 <li>
 <p><code>repository_host</code> - an http url which will be used for creating a link to a file in a
