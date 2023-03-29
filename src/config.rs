@@ -113,7 +113,7 @@ pub fn read_config(path: Option<&str>) -> Option<Config> {
     config
 }
 
-pub fn create_default_config() {
+pub fn create_default_config() -> Config {
     let theme = ColorfulTheme {
         values_style: Style::new().cyan(),
         ..ColorfulTheme::default()
@@ -172,7 +172,7 @@ pub fn create_default_config() {
         gh_username, gh_repo
     ));
 
-    let config = serde_json::to_string_pretty(&Config {
+    let config = Config {
         docs_folder,
         project_path,
         repository_host,
@@ -185,14 +185,17 @@ pub fn create_default_config() {
         comment_end_string: None,
         comment_prefix: None,
         plugins_dir: Some(String::from("./plugins")),
-    })
-    .unwrap();
+    };
+
+    let config_str = serde_json::to_string_pretty(&config).unwrap();
 
     match File::create("./fundoc.json") {
-        Ok(mut file) => match file.write_all(config.as_bytes()) {
+        Ok(mut file) => match file.write_all(config_str.as_bytes()) {
             Ok(_) => println!("Initialization is completed!",),
             Err(_) => println!("Cannot create the config file"),
         },
         Err(e) => println!("{:?}", e),
     }
+
+    config
 }

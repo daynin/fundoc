@@ -9,7 +9,6 @@ mod parser;
 mod plugins;
 
 use ansi_term::Colour;
-use plugins::Plugins;
 use std::fs;
 
 fn parse_articles(config: config::Config, root: &str) -> Vec<parser::Article> {
@@ -39,23 +38,22 @@ fn parse_articles(config: config::Config, root: &str) -> Vec<parser::Article> {
     result.articles
 }
 
-fn generate_book(config: config::Config) {
-    /* book::init_book(config); */
-    book::build_book();
-}
-
 fn main() {
     let args = cli::create_cli();
 
     if let Some(true) = args.get_one::<bool>("init") {
-        config::create_default_config()
+        let config = config::create_default_config();
+        book::init_book(config);
     } else if let Some(true) = args.get_one::<bool>("extension") {
         match config::read_config(None) {
             Some(config) => {
                 let plugins = plugins::Plugins::new(lua_runtime::LuaRuntime::new(), config);
-                plugins.run_as_plugin();
-            },
-            _ => {},
+                match plugins.run_as_plugin() {
+                    Err(err) => eprintln!("{:#?}", err),
+                    _ => {}
+                }
+            }
+            _ => {}
         }
     } else {
         match config::read_config(None) {
@@ -74,7 +72,7 @@ fn main() {
                 generator::generate_docs(articles, config.clone());
 
                 if config.mdbook.unwrap() {
-                    generate_book(config.clone());
+                    book::build_book();
 
                     fs::remove_dir_all(config.docs_folder.unwrap()).ok();
                 }
