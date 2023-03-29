@@ -542,6 +542,7 @@ fn get_test_config() -> config::Config {
         book_name: None,
         book_build_dir: None,
         repositories: None,
+        plugins_dir: None,
     }
 }
 
