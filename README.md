@@ -106,8 +106,7 @@ e
 ### Companies/projects who use Fundoc
 
 - [Space Twistie](https://github.com/Space-Twistie)
-- [CSSSR](https://csssr.com/en)
-- [Zaya Tracker](https://github.com/Zaya-Tracker)
+- [CSSSR](https://github.com/CSSSR/linters)
 
 Know of others? Create a PR to let me know!
 
