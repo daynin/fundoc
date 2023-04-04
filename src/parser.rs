@@ -240,7 +240,7 @@ impl Keyword {
 
 pub struct Parser {
     state_machine: ParserStateMachine,
-    comment_symbol: char,
+    comment_symbol: String,
     start_comment: String,
     end_comment: String,
     code_block: String,
@@ -255,7 +255,7 @@ impl Parser {
         let start_comment = config
             .comment_start_string
             .unwrap_or_else(|| "/**".to_string());
-        let comment_symbol = config.comment_prefix.unwrap_or('*');
+        let comment_symbol = config.comment_prefix.unwrap_or("*".to_string());
         let end_comment = config
             .comment_end_string
             .unwrap_or_else(|| "*/".to_string());
@@ -329,7 +329,7 @@ impl Parser {
 
     fn trim_article_line(&self, line: String) -> String {
         line.trim_start()
-            .trim_start_matches(self.comment_symbol)
+            .trim_start_matches(&self.comment_symbol)
             .trim_start()
             .to_string()
     }
@@ -361,13 +361,22 @@ impl Parser {
     fn parse_text<'a>(&self, line: &'a str) -> &'a str {
         let empty_comment_line = format!("{} ", self.comment_symbol);
         let trimmed_line = line.trim_start();
+        let space_symbol = ' ';
 
-        if trimmed_line.starts_with(&empty_comment_line) {
-            &trimmed_line[2..]
-        } else if trimmed_line.starts_with(' ') || trimmed_line.starts_with(self.comment_symbol) {
-            &trimmed_line[1..]
-        } else {
-            trimmed_line
+        match trimmed_line {
+            l if l.starts_with(&empty_comment_line) =>
+            {
+                &l[empty_comment_line.chars().count()..]
+            }
+            l if trimmed_line.starts_with(space_symbol) =>
+            {
+                &l[1..]
+            }
+            l if l.starts_with(&self.comment_symbol) =>
+            {
+                &l[self.comment_symbol.chars().count()..]
+            }
+            _ => &trimmed_line
         }
     }
 
@@ -570,6 +579,90 @@ pub fn test () {}
 }
 
 #[test]
+<<<<<<< Updated upstream
+=======
+fn parse_articles_with_custom_comment_symbol() {
+    let mut parser = Parser::new({
+        config::Config {
+            project_path: "test".to_string(),
+            files_patterns: vec!["test".to_string()],
+            docs_folder: None,
+            repository_host: None,
+            comment_start_string: Some("/@-".to_string()),
+            comment_prefix: Some("@-".to_string()),
+            comment_end_string: Some("@-/".to_string()),
+            mdbook: None,
+            book_name: None,
+            book_build_dir: None,
+            repositories: None,
+            plugins_dir: None,
+        }
+    });
+    let file_content = "
+/@-
+ @- @Article Test article
+ @- some text
+ @-/
+pub fn test () {}
+  ";
+
+    let articles = parser.parse_file(file_content, "");
+    let expected_result = vec![Article {
+        order: 0,
+        topic: String::from("Test article"),
+        content: String::from("some text"),
+        path: "".to_string(),
+        start_line: 3,
+        end_line: 4,
+    }];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+fn parse_articles_with_custom_order() {
+    let mut parser = Parser::new(get_test_config());
+    let file_content = "
+/**
+ * @Article Test article3
+ * @Order 3
+ * some text3
+ */
+pub fn test () {}
+
+/**
+ * @Article Test article1
+ * @Order 1
+ * some text
+ */
+pub fn test2 () {}
+  ";
+
+    let articles = parser.parse_file(file_content, "");
+    let expected_result = vec![
+        Article {
+            order: 1,
+            topic: String::from("Test article1"),
+            content: String::from("some text"),
+            path: "".to_string(),
+            start_line: 11,
+            end_line: 12,
+        },
+        Article {
+            order: 3,
+            topic: String::from("Test article3"),
+            content: String::from("some text3"),
+            path: "".to_string(),
+            start_line: 4,
+            end_line: 5,
+        },
+    ];
+
+    assert_eq!(articles, expected_result);
+}
+
+#[test]
+>>>>>>> Stashed changes
 fn ignore_comments_with_ignore_mark() {
     let mut parser = Parser::new(get_test_config());
     let file_content = "
