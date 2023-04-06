@@ -98,7 +98,7 @@ function transform(text)
   importMermaid = '<script type="module"> import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.0.2/+esm"; mermaid.initialize({}); </script>'
 
   result = '<pre class="mermaid">' .. text .. '</pre>' .. importMermaid
-e
+end
 ```
 
 [Read more](https://daynin.github.io/fundoc/plugins.html) about plugins!
