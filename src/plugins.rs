@@ -28,7 +28,7 @@ pub struct Plugins {
  * {{ #your-plugin-name
  *  any text here
  * }}
- * 
+ *
  * ```
  *
  * To create a plugin for parsing these blocks, you should add a file called `your-plugin-name.html.lua` into the plugins folder. By default, it's `./plugins`, but it's possible to change it in the config file.
@@ -44,7 +44,7 @@ pub struct Plugins {
  *
  * ```lua
  * function transform(text)
- *   result = 'transformted text' 
+ *   result = 'transformted text'
  * end
  * ```
  *
