@@ -65,7 +65,7 @@ pub struct Config {
      * - `comment_end_string` - a string which marks the end of a comments block. Example: \*&#47;
      */
     pub comment_start_string: Option<String>,
-    pub comment_prefix: Option<char>,
+    pub comment_prefix: Option<String>,
     pub comment_end_string: Option<String>,
     /**
      * @Article Configuration
