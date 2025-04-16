@@ -6,8 +6,8 @@ edition = "2018"
 license = "MIT"
 description = "fundoc - is a documentation generator that helps you keep your documentation up-to-date."
 readme = "README.md"
-homepage = "https://github.com/CSSSR/fundoc"
-repository = "https://github.com/CSSSR/fundoc"
+homepage = "https://github.com/daynin/fundoc"
+repository = "https://github.com/daynin/fundoc"
 keywords = ["cli", "documentation", "generator"]
 categories = ["command-line-utilities"]
 

@@ -32,13 +32,10 @@ impl LuaRuntime {
 
     pub fn call_transform(&self, text: String) -> Result<String> {
         self.runtime.context(|ctx| {
-            let transform: Function = ctx.globals().get("transform")?;
+            let transform: Function = ctx.globals().get("Transform")?;
+            transform.call::<_, ()>(text)?;
 
-            if let Err(err) = transform.call::<_, ()>(text) {
-                eprintln!("{:#?}", err)
-            }
-
-            ctx.globals().get::<_, String>("result")
+            ctx.globals().get::<_, String>("Result")
         })
     }
 }

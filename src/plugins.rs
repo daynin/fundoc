@@ -1,3 +1,4 @@
+use clap::error::Result;
 use mdbook::book::{BookItem, Chapter};
 use mdbook::preprocess::CmdPreprocessor;
 use regex::Regex;
@@ -28,7 +29,7 @@ pub struct Plugins {
  * {{ #your-plugin-name
  *  any text here
  * }}
- * 
+ *
  * ```
  *
  * To create a plugin for parsing these blocks, you should add a file called `your-plugin-name.html.lua` into the plugins folder. By default, it's `./plugins`, but it's possible to change it in the config file.
@@ -44,7 +45,7 @@ pub struct Plugins {
  *
  * ```lua
  * function transform(text)
- *   result = 'transformted text' 
+ *   result = 'transformted text'
  * end
  * ```
  *
@@ -92,8 +93,8 @@ impl Plugins {
             };
             let regex_str = String::from(r"\{\{ #") + preprocessor_value + r"[\w\W]*\}\}";
             let re = Regex::new(&regex_str).unwrap();
-
             let plugin_src = fs::read_to_string(file_path).unwrap();
+
             book.sections = book
                 .sections
                 .iter()
@@ -101,7 +102,6 @@ impl Plugins {
                     BookItem::Chapter(chapter) => {
                         let mut content = chapter.content.clone();
 
-                        #[allow(clippy::redundant_clone)]
                         for capture in re.captures_iter(&content.clone()) {
                             let src_text = capture.get(0).map_or("", |c| c.as_str()).to_string();
 
@@ -144,6 +144,13 @@ impl Plugins {
         let mut extracted_text = src_text.replace(&preprocessor_header, "");
         extracted_text = extracted_text.replace("}}", "");
 
-        self.lua_runtime.call_transform(extracted_text).unwrap()
+        match self.lua_runtime.call_transform(extracted_text) {
+            Ok(result) => result,
+            Err(err) => {
+                eprintln!("{:#?}", err);
+
+                "".to_string()
+            }
+        }
     }
 }

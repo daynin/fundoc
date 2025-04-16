@@ -67,7 +67,7 @@ fn main() {
 
                 generator::generate_docs(articles, config.clone());
 
-                if config.mdbook.unwrap() {
+                if let Some(true) = config.mdbook {
                     book::build_book();
 
                     fs::remove_dir_all(config.docs_folder.unwrap()).ok();
