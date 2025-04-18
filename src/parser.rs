@@ -27,7 +27,7 @@ impl ParserStateMachine {
         }
     }
 
-    fn to_skippintg_mut(&mut self) {
+    fn to_skipping_mut(&mut self) {
         self.state = match self.state {
             ParserState::Initialized => ParserState::Skipping,
             ParserState::CommentParsing => ParserState::Skipping,
@@ -407,7 +407,7 @@ impl Parser {
             self.current_article = self.new_article();
         }
 
-        self.state_machine.to_skippintg_mut();
+        self.state_machine.to_skipping_mut();
     }
 
     fn parse_article_content(&mut self, line: &str, line_number: i16) {
@@ -430,7 +430,7 @@ impl Parser {
             self.current_article.start_line = line_number;
             self.state_machine.to_article_mut();
         } else if trimmed_line.starts_with(Keyword::Ignore.as_str()) {
-            self.state_machine.to_skippintg_mut();
+            self.state_machine.to_skipping_mut();
             self.current_article = self.new_article();
             self.file_global_topic = String::from("");
         } else if trimmed_line.starts_with(Keyword::CodeBlockStart.as_str()) {
@@ -450,7 +450,7 @@ impl Parser {
             self.articles.push(self.current_article.clone());
 
             self.current_article = self.new_article();
-            self.state_machine.to_skippintg_mut();
+            self.state_machine.to_skipping_mut();
         } else if self.state_machine.is_in(ParserState::ArticleParsing)
             || self.state_machine.is_in(ParserState::CodeBlockParsing)
             || self.state_machine.is_in(ParserState::NestedCommentParsing)
@@ -470,7 +470,7 @@ impl Parser {
 
         let mut line_number = 1;
 
-        self.state_machine.to_skippintg_mut();
+        self.state_machine.to_skipping_mut();
 
         for line in file_content.lines() {
             self.set_comment_boundaries(line);
